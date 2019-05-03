@@ -1,0 +1,7 @@
+<!--
+@Author: Aleksandr Shcherbanyuk
+@Created Date: 11/01/2018
+-->
+<aura:event type="COMPONENT" description="Event fired when pressed the button">
+    <aura:attribute name="isButtonPressed" type="Boolean" default="false" />
+</aura:event>

@@ -1,0 +1,72 @@
+<!--
+- @Author: Aleksandr Shcherbanyuk
+- @Created Date: 11/13/2018
+- @History: modified by Aleksandr Sherbanyuk INT-531 09/07/19
+-->
+<aura:component>
+
+    <aura:attribute name="steps" type="List" default="[]" />
+    <aura:attribute name="stepsWithParams" type="List" default="[]" access="private" />
+    <aura:attribute name="currentStep" type="String" default="" />
+    <aura:attribute name="buttonName" type="String" default="Mark Status as Complete" />
+    <aura:attribute name="showButton" type="Boolean" default="false" />
+    <aura:attribute name="buttonAction" type="Aura.Action" access="public" />
+    <aura:attribute name="isHandleStepSelect" type="Boolean" access="public" default="false" />
+    <aura:attribute name="isFocus" type="Boolean" default="false" />
+    <aura:attribute name="isFocusButton" type="Map" default="{}" />
+
+    <aura:attribute name="isLeftLocked" type="Boolean" default="false" access="public"/>
+    <aura:attribute name="leftLowestLevel" type="Integer" required="false" default="0" access="public"/>
+    <aura:attribute name="rightLowestLevel" type="Integer" required="false" default="0" access="public"/>
+    <aura:attribute name="pathBorder" type="Integer" required="false" default="3" access="public"/>
+
+    <aura:method name="nextStep" action="{!c.moveToNextStep}"/>
+    <aura:method name="previousStep" action="{!c.moveToPreviousStep}"/>
+	<aura:method name="getCurrentStep" action="{!c.getCurrentStep}"/>   
+    <aura:method name="spinnerAction" action="{!c.setSpinnerAction}" />
+    <aura:method name="showHideButton" action="{!c.showHideButton}" />
+    <aura:method name="getButtonName" action="{!c.getButtonName}" />
+    <aura:method name="setButton" action="{!c.buttonDefinition}">
+        <aura:attribute name="buttonNameParam" type="String" />
+    </aura:method>
+
+    <aura:handler name="change" value="{!v.currentStep}"  action="{!c.handlerCurrentStep}" />
+    <aura:handler name="change" value="{!v.steps}"  action="{!c.handlerSteps}" />
+
+    <article class="slds-card">
+        <div class="slds-path">
+            <div class="slds-grid slds-path__track">
+                <div class="slds-grid slds-path__scroller-container">
+                    <div class="slds-path__scroller" role="application">
+                        <div class="slds-path__scroller_inner">
+                            <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                <aura:iteration items="{!v.stepsWithParams}" var="item">
+                                    <li class="{!item.classes}" role="presentation">
+                                        <a aria-selected="{!item.selected}" class="slds-path__link" data-index="{!item.stepIndex}"  name="{!item.pathValue}" role="option" onclick="{!c.onStepSelect}">
+                                            <span class="slds-path__stage">
+                                                <lightning:icon class="customIcon" iconName="utility:check" size="xx-small" alternativeText="check" />
+                                            </span>
+                                            <span class="slds-path__title">{!item.pathName}</span>
+                                        </a>
+                                    </li>
+                                </aura:iteration>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <aura:if isTrue="{!v.showButton}">
+                    <div class="slds-grid slds-path__action">
+                        <div class="slds-is-relative">
+                            <button class="slds-button slds-button_brand slds-path__mark-complete" onclick="{!v.buttonAction}" onblur="{!c.handleIsFocus}" onfocus="{!c.handleIsFocus}">
+                                <lightning:icon class="customIcon" iconName="utility:check" size="xx-small" alternativeText="check" />
+                                {!v.buttonName}
+                            </button>
+                            <lightning:spinner aura:id="custSpinner" class="slds-hide" alternativeText="Loading" size="small" variant="brand"/>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </article>
+
+</aura:component>

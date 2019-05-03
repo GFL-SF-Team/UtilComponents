@@ -1,0 +1,174 @@
+<!--
+@history: [INT-207] Aleksandr Shcherbanyuk 11/06/18: added Trade Step Logic
+          [INT-281] Aleksandr Shcherbanyuk 11/15/18: added Trade Step Logic
+          [INT-288] Dmytro Lambru 18.11.18 - Added <c:Utils_PermissionCheckingService> for hiding some elements for 'Sales' (read only) user
+          [INT-316] Dmytro Lambru 30.11.18 - Changed keyword 'sales' on 'readonly' and check result 'isSales' on 'isReadonly' (related [INT-288])
+          [INT-332] Aleksandr Shcherbanyuk 12/19/18: removed registerEvent name="TradeStepsComponentChangedEvent"
+
+@technical comment: Dmytro Lambru 18.11.18 - 15 conditions. It is harder and harder to understand and every next change can affect all applications where it is used. Think well before you use it.
+-->
+<aura:component implements="force:lightningQuickActionWithoutHeader,flexipage:availableForAllPageTypes,force:hasRecordId" controller="L_JunctionObjectController">
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <aura:attribute name="clearLookup" type="Boolean"/>
+    <aura:attribute name="isModal" type="Boolean" default="true"/> <!--INT 214  Aleksandr Shcherbanyuk 9/28/18-->
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="relatedObjectName" type="String"/>
+    <aura:attribute name="junctionObjectId" type="Boolean" default="false"/>
+    <aura:attribute name="relatedRecords" type="Map" default="{}"/>
+    <aura:attribute name="fieldsForShow" type="Map" default="{}"/>
+    <aura:attribute name="searchParams" type="Map" default="{}"/>
+    <aura:attribute name="recordData" type="List"/>
+    <aura:attribute name="labels" type="List"/>
+    <!--INT 207  Aleksandr Shcherbanyuk 11/06/18 added-->
+    <aura:attribute name="isTradeStep" type="Boolean" default="false"/>
+    <aura:attribute name="currentStep" type="String" default="" />
+    <aura:attribute name="stepNames" type="Map" default="{}" />
+    <aura:attribute name="fieldsForUpdate" type="Map"/>
+    <!-- private -->
+    <aura:attribute access="private" type="Map" name="profileCheckResultMap" default="{}" description="Object with checked profiles, e.g. {isAdmin: false, isReadonly: true}"/>
+
+    <!-- HANDLERS -->
+    <aura:handler name="searchRecord" event="c:RecordSearchEvent" action="{!c.addRecordToJunction}"/>
+
+    <!-- MARKUP -->
+    <c:Utils_PermissionCheckingService profileList="['readonly']" profileCheckResultMap="{! v.profileCheckResultMap }"
+                                       onAfterChecking="{!c.doInit}"/>
+
+    <div aura:id="placeForToast"></div>
+    <div>
+        <div class="slds-grid slds-grid_vertical">
+            <!-- [INT-288] HIDE FOR 'SALES' USER -->
+            <aura:if isTrue="{! not(v.profileCheckResultMap.isReadonly) }">
+                <div class="slds-p-vertical_x-small slds-p-horizontal_large slds-shrink-none slds-theme_shade ">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label slds-assistive-text" for="combobox-unique-id-6">Search</label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-combobox_container">
+                                <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                                        <c:Search objectName="{!v.searchParams.objectName}"
+                                                  field_For_Search="{!v.searchParams.fieldsForSearch}"
+                                                  limit="4"
+                                                  clearLookup="{!v.clearLookup}"
+                                                  prefix="{!v.searchParams.prefix}"
+                                                  filterFields="{!v.searchParams.relatedFilter}"
+                                                  field_API_search="{!v.searchParams.showResult}"
+                                                  lookupIcon="standard:opportunity"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aura:if>
+            <!-- Start INT 214 Aleksandr Shcherbanyuk 9/28/18-->
+            <div class="{! !v.isModal? (!v.isTradeStep? 'slds-scrollable slds-grow slds-is-relative workSpaceNotModal' : 'slds-scrollable slds-grow slds-is-relative workSpaceTradeStep') : 'slds-scrollable slds-grow workSpace slds-is-relative'}" >
+                <lightning:spinner variant="brand" size="large" aura:id="spinner" class="slds-hide"/>
+
+                <table role="grid" class="{! !v.isModal? 'slds-table slds-table_bordered' : 'slds-table slds-table_fixed-layout slds-table_bordered  slds-no-row-hover slds-scrollable_none'}">
+                    <thead>
+                        <aura:if isTrue="{! !v.isModal}">
+                            <tr class="slds-text-title_caps">
+                                <!-- [INT-288] HIDE FOR 'SALES' USER -->
+                                <aura:if isTrue="{! not(v.profileCheckResultMap.isReadonly) }">
+                                    <th scope="col"><div class="slds-truncate"></div></th>
+                                </aura:if>
+                                <aura:iteration items="{!v.labels}" var="label">
+                                    <th scope="col">
+                                        <div class="slds-truncate slds-cell-wrap" title="{!label}">{!label}</div>
+                                    </th>
+                                </aura:iteration>
+                            </tr>
+
+                            <aura:set attribute="else">
+                                <!-- [INT-288] HIDE FOR 'SALES' USER -->
+                                <aura:if isTrue="{! not(v.profileCheckResultMap.isReadonly) }">
+                                    <th scope="col" style="width: 5rem;"></th>
+                                </aura:if>
+                                <aura:iteration items="{!v.labels}" var="label">
+                                    <th aria-label="Performance" aria-sort="none"
+                                        class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
+                                        <span class="slds-truncate" title="{!label}">{!label}</span>
+                                    </th>
+                                </aura:iteration>
+                            </aura:set>
+                        </aura:if>
+                    </thead>
+                    <!-- End INT 214 Aleksandr Shcherbanyuk 9/28/18-->
+                    <tbody>
+                        <aura:iteration items="{!v.recordData}" var="params" indexVar="index">
+                            <tr>
+                                <!-- [INT-288] HIDE FOR 'SALES' USER -->
+                                <aura:if isTrue="{! not(v.profileCheckResultMap.isReadonly) }">
+                                    <td role="gridcell" tabindex="0" class="slds-align_absolute-center">
+                                        <lightning:buttonIcon iconName="utility:delete"
+                                                              variant="border-filled"
+                                                              alternativeText="delete"
+                                                              class="slds-button"
+                                                              value="{!params.recordsData[0].junctionObjectId}"
+                                                              onclick="{!c.deleteJunctionObjectRecord}"/>
+                                        <aura:if isTrue="{! !empty(v.fieldsForUpdate.fieldsForEdit)}">
+                                            <aura:if isTrue="{! v.junctionObjectId != params.recordsData[0].junctionObjectId}">
+                                                <lightning:buttonIcon iconName="utility:edit"
+                                                                    variant="border-filled"
+                                                                    alternativeText="edit"
+                                                                    class="slds-button"
+                                                                    value="{!params.recordsData[0].junctionObjectId}"
+                                                                    onclick="{!c.editJunctionObject}"/>
+
+                                                <aura:set attribute="else">
+                                                    <lightning:buttonIcon iconName="utility:check"
+                                                                          variant="border-filled"
+                                                                          alternativeText="edit"
+                                                                          class="slds-button"
+                                                                          value="{!params.recordsData[0].junctionObjectId}"
+                                                                          onclick="{!c.editConfirm}"/>
+                                                </aura:set>
+                                            </aura:if>
+                                        </aura:if>
+                                    </td>
+                                </aura:if>
+                                <aura:if isTrue="{! v.junctionObjectId != params.recordsData[0].junctionObjectId}">
+                                    <aura:iteration items="{!params.recordsData}" var="recordData">
+                                        <aura:if isTrue="{!recordData.show =='show'}">
+                                            <th scope="row">
+                                                <div class="slds-truncate slds-cell-wrap" title="{!recordData.label}">
+                                                    <aura:if isTrue="{!recordData.type =='Decimal'}">
+                                                        <ui:outputNumber value="{!recordData.value}" format="{!recordData.format}"/>
+                                                    </aura:if>
+
+                                                    <aura:if isTrue="{!recordData.type =='String'}">
+                                                        <ui:outputText value="{!recordData.value}"/>
+                                                    </aura:if>
+
+                                                    <aura:if isTrue="{!recordData.type =='Checkbox'}">
+                                                        <ui:outputCheckbox value="{!recordData.value}"/>
+                                                    </aura:if>
+                                                </div>
+                                            </th>
+                                        </aura:if>
+                                    </aura:iteration>
+
+                                    <aura:set attribute="else">
+                                        <c:EditJunction fieldsForUpdate="{!v.fieldsForUpdate}"
+                                                        recordId="{!params.recordsData[0].junctionObjectId}"
+                                                        recordData="{!params.recordsData}"
+                                                        key="{!index}"
+                                                        aura:id="editComponent"/>
+                                    </aura:set>
+                                </aura:if>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!--INT 207  Aleksandr Shcherbanyuk 11/06/18 added-->
+        <aura:if isTrue="{!and(v.isTradeStep, greaterthan(v.recordData.length, 0))}">
+            <div class="slds-p-top--small">
+                <!--<c:TradeStepsVerification recordId="{!v.recordId}" verifyRecords="{!v.recordData}" currentStep="{!v.currentStep}" stepNames="{!v.stepNames}" />-->
+            </div>
+        </aura:if>
+    </div>
+</aura:component>

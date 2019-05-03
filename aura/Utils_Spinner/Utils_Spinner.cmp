@@ -1,0 +1,22 @@
+<aura:component>
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <aura:attribute access="public" type="String" name="size" default="xx-small" description="Spinner size can be: 'xx-small', 'x-small', 'small', 'medium', 'large'" />
+    <aura:attribute access="public" type="String" name="variant" default="base" description="Spinner variant can be: 'base', 'brand' or 'inverse'" />
+    <aura:attribute access="public" type="Integer" name="verticalOffset" default="50" description="Vertical offset in the parent block relative to the left edge. NOTE: Parent block MUST has class 'slds-is-relative'" />
+    <aura:attribute access="public" type="String" name="positionStyle" default="absolute" description="CSS style 'position: absolute / relative / inherit etc.'" />
+    <aura:attribute access="public" type="Boolean" name="isHidden" default="TRUE" description="Hidden by default or not" />
+
+    <!-- METHODS -->
+    <aura:method access="public" name="show" description="Show spinner" />
+    <aura:method access="public" name="hide" description="Hide spinner" />
+
+    <!-- MARKUP -->
+    <div style="{# 'left: ' +v.verticalOffset+ '% !important; position: ' +v.positionStyle+ ' !important;' }"
+         class="{! 'slds-spinner slds-spinner_' + v.size + if(v.variant == 'brand', ' slds-spinner_brand ', '') + if(v.variant == 'inverse', ' slds-spinner_inverse ', '') + if(v.isHidden, ' slds-hide ', '')}">
+
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+    </div>
+</aura:component>

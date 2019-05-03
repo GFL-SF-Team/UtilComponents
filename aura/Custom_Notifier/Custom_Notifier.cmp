@@ -1,0 +1,40 @@
+<!--
+@Author: Aleksandr Shcherbanyuk
+@Created Date: 11/01/2018
+-->
+<aura:component access="global">
+
+    <aura:attribute name="notifierType" type="String" default="error"/>
+    <aura:attribute name="title" type="String" default="Attention!"/>
+    <aura:attribute name="message" type="String" default="Attention!"/>
+    <aura:attribute name="styleForMessage" type="String" default="text-align: center;"/>
+    <aura:attribute name="buttonName" type="String" default="OK"/>
+
+    <aura:registerEvent name="Custom_NotifierEvent" type="c:Custom_NotifierEvent"/>
+
+
+    <aura:method name="doAction" access="global">
+        <aura:attribute name="dataForAttributes" type="Map" />
+    </aura:method>
+
+    <div aura:id="customNotifier" class="slds-hide">
+        <section role="alertdialog" tabindex="-1" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+            <div class="slds-modal__container">
+                <header class="{! 'slds-modal__header slds-theme_alert-texture slds-theme_' + v.notifierType}">
+
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">{!v.title}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="prompt-message-wrapper">
+                        <div style="{!v.styleForMessage}">
+                            {!v.message}
+                        </div>
+                </div>
+                <footer class="slds-modal__footer slds-theme_default">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.handleClick}">{!v.buttonName}</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+
+</aura:component>

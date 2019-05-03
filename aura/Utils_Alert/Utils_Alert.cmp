@@ -1,0 +1,32 @@
+<!--
+@author: Dmytro Lambru
+@ticket: [INT-301]
+@date: 31.01.19
+-->
+<aura:component>
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <aura:attribute access="public" type="String" name="message" required="TRUE" />
+    <aura:attribute access="public" type="String" name="variant" required="TRUE" description="You can use only these variants: info, warning, error, offline" />
+    <aura:attribute access="public" type="String" name="iconName" required="FALSE" default="" description="Any utility:icon name if needed" />
+
+    <!-- MARKUP -->
+    <div style="border-radius: .25rem; width: 100%" class="{! 'slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_' + v.variant }" role="alert">
+        <!-- ICON -->
+        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+            <lightning:icon variant="bare" size="xx-small" iconName="{! 'utility:' + if(empty(v.iconName), v.variant, v.iconName) }" alternativeText="{! if(empty(v.iconName), v.variant, v.iconName) }"/>
+        </span>
+
+        <!-- MESSAGE -->
+        <h2 style="font-weight: bolder">
+            {!v.message}
+        </h2>
+
+        <!-- you can to do: BUTTON - enable + event on click with alertComponentId for dynamically destruction -->
+        <!--<div class="slds-notify__close">-->
+            <!--<button class="slds-button slds-button_icon slds-button_icon-small" title="Close">-->
+                <!--<lightning:icon variant="bare" size="xx-small" iconName="utility:close" alternativeText="Close"/>-->
+            <!--</button>-->
+        <!--</div>-->
+    </div>
+</aura:component>

@@ -1,0 +1,5 @@
+<!-- c:Event_MapApp -->
+<!-- Created by Andrii Kolotii | 4.10.2019 -->
+<aura:event type="APPLICATION" description="Event with map object">
+    <aura:attribute type="Map" name="map" required="true" description="'{key: value, key2: value2}'" />
+</aura:event>

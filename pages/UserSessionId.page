@@ -1,0 +1,4 @@
+<apex:page standardStylesheets="false" lightningStylesheets="false">
+    <!-- DO NOT CHANGE ANYTHING ON THIS PAGE -->
+    %SESSION_ID_START%{!$Api.Session_ID}%SESSION_ID_END%
+</apex:page>

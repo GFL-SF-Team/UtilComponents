@@ -1,0 +1,5 @@
+<aura:event type="APPLICATION" description="Fired when related object were updated">
+    <aura:attribute name="relatedObjectId" type="String"/>
+    <aura:attribute name="status" type="String"/>
+    <aura:attribute name="objectName" type="String"/>
+</aura:event>

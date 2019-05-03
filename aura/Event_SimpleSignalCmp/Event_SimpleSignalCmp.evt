@@ -1,0 +1,4 @@
+<!-- c:Event_SimpleSignalCmp -->
+<!-- Dmytro Lambru 17.11.18 -->
+<aura:event type="COMPONENT" description="Simple signal without values">
+</aura:event>

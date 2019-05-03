@@ -1,0 +1,42 @@
+<!--
+ - Created by andriylokotosh on 11/18/18.
+ -->
+
+<aura:component description="Utils_RequiredFieldsVerificator">
+    <aura:attribute access="public" type="Object" name="sObject" default="{}" description="Any sObject"/>
+    <aura:attribute access="public" type="List" name="requiredFields" default="[]" description="fields as Options example:  [{'Name','Jack Smith'},{}]"/>
+    <aura:attribute access="private" type="List" name="failedFields" default="[]" description="fields as Options example:  [{'Name','Jack Smith'},{}]"/>
+
+    <aura:method name="verify" action="{!c.verifySObject}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <section aura:id="body" class="slds-popover slds-popover_error slds-nubbin_left slds-hide slds-fade-in-open" role="dialog" aria-labelledby="dialog-heading-id-1" aria-describedby="dialog-body-id-2" style="position:absolute; width:13rem;">
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon-inverse" title="Close dialog">
+            <lightning:icon iconName="utility:close" size="x-small" variant="inverse"/>
+            <span class="slds-assistive-text">Close dialog</span>
+        </button>
+        <header class="slds-popover__header">
+            <div class="slds-media slds-media_center slds-has-flexi-truncate ">
+                <div class="slds-media__figure">
+        <span class="slds-icon_container slds-icon-utility-error">
+            <lightning:icon iconName="utility:error" size="x-small" variant="inverse"/>
+        </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-truncate slds-text-heading_medium" id="dialog-heading-id-1" title="Resolve error">Required</h2>
+                </div>
+            </div>
+        </header>
+        <div class="slds-popover__body" id="dialog-body-id-2">
+            <ul>
+                <aura:iteration items="{!v.failedFields}" var="field">
+                    <li class="slds-p-top_x-small">
+                        <span class="slds-badge">{!field}</span>
+                    </li>
+                </aura:iteration>
+            </ul>
+        </div>
+    </section>
+
+
+</aura:component>

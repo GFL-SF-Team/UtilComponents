@@ -1,0 +1,90 @@
+<aura:component description="Component for edit junction record">
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
+
+    <aura:attribute name="strike" type="String"/>
+    <aura:attribute name="oldStrike" type="String"/>
+    <aura:attribute name="fieldsForUpdate" type="Map"/>
+    <aura:attribute name="recordData" type="List"/>
+    <aura:attribute name="newRecordData" type="List"/>
+    <aura:attribute name="recordDataForUpdate" type="String"/>
+
+
+    <aura:attribute name="performance" type="String"/>
+    <aura:attribute name="oldPerformance" type="String"/>
+    <aura:attribute name="spot" type="String"/>
+
+    <aura:attribute name="key" type="Integer"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:method name="handleSaveRecord"
+                 description="Sample method with server-side call">
+        <aura:attribute name="callback" type="Function" />
+    </aura:method>
+
+    <force:recordData aura:id="recordEditor"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetFields="{!v.simpleRecord}"
+                      fields="{!v.recordDataForUpdate}"
+                      mode="EDIT"/>
+
+    <aura:if isTrue="{!not(empty(v.newRecordData))}">
+    <aura:iteration items="{!v.newRecordData}" var="recordData">
+        <aura:if isTrue="{!recordData.show =='show'}">
+            <th scope="row">
+                <div class="slds-truncate"
+                     title="{!recordData.label}">
+                    <aura:if isTrue="{!recordData.type =='Decimal'}">
+                        <ui:outputNumber value="{!recordData.value}" format="{!recordData.format}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!recordData.type =='String'}">
+                        <ui:outputText value="{!recordData.value}" />
+                    </aura:if>
+                    <aura:if isTrue="{!recordData.type =='Checkbox'}">
+                        <ui:outputCheckbox value="{!recordData.value}"/>
+                    </aura:if>
+                </div>
+            </th>
+        </aura:if>
+
+        <aura:if isTrue="{!recordData.show =='edit'}">
+            <th scope="row">
+                <div class="slds-truncate"
+                     title="{!recordData.label}">
+                     <aura:if isTrue="{!recordData.type =='Decimal'}">
+                        <lightning:input
+                        type="Number"
+                        value="{!recordData.value}"
+                        label=""
+                        variant="label-hidden"
+                        step="0.01"/>
+                    </aura:if>
+                    <aura:if isTrue="{!recordData.type =='String'}">
+                        <lightning:input
+                        value="{!recordData.value}"
+                        label=""
+                        variant="label-hidden"/>
+                    </aura:if>
+                    <aura:if isTrue="{!recordData.type =='Checkbox'}">
+                        <lightning:input 
+                        type="checkbox" 
+                        checked="{!recordData.value}"
+                        label=""
+                        variant="label-hidden"/>
+                    </aura:if>
+
+                </div>
+            </th>
+        </aura:if>
+    </aura:iteration>
+    </aura:if>
+
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            {!v.recordError}</div>
+    </aura:if>
+</aura:component>

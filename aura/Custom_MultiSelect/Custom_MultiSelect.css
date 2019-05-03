@@ -1,0 +1,61 @@
+.THIS .input:disabled {
+    cursor: not-allowed;
+}
+
+.THIS .slds-input:enabled:read-only {
+    cursor: pointer;
+}
+
+.THIS .slds-input::-webkit-input-placeholder {
+    color: #000000;
+}
+
+.THIS .slds-input::-moz-input-placeholder {
+    color: #000000;
+}
+
+.THIS .slds-input::-ms-input-placeholder {
+    color: #000000;
+}
+
+.THIS .my_noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+.THIS .my_outline_none {
+    outline: none;
+}
+
+.THIS .my_fixed_dropdown {
+    position: fixed;
+    z-index: 7000;
+    float: left;
+    min-width: 6rem;
+    /*margin-top: 0.125rem;*/
+    /*margin-bottom: 0.125rem;*/
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0;
+    font-size: 0.75rem;
+    /*background: white;*/
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16);
+    background-color: #fbfbfb;
+}
+
+.THIS .slds-dropdown-trigger .my_fixed_dropdown {
+    visibility: hidden;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.1s linear, visibility 0.1s linear;
+}
+
+.THIS .slds-dropdown-trigger.slds-is-open .my_fixed_dropdown {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}

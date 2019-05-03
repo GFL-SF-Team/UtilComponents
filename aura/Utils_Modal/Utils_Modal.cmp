@@ -1,0 +1,59 @@
+<aura:component extensible="true" access="public">
+  <aura:attribute name="header" type="Aura.Component[]" access="public"/>
+  <aura:attribute name="content" type="Aura.Component[]" access="public"/>
+  <aura:attribute name="footer" type="Aura.Component[]" access="public"/>
+
+
+  <aura:attribute name="type" access="public" type="String" default="modal" required="true"/>
+  <aura:attribute name="closeAction" type="Aura.Action" access="public"/>
+  <aura:attribute name="class" type="String" access="public" default=""/>
+  <aura:attribute name="size" type="String" access="public" default="medium"/>
+
+  <aura:attribute name="withFooter" type="boolean" access="public" default="true"/>
+
+  <aura:method name="open" action="{!c.openModal}" />
+  <aura:method name="close" action="{!c.closeModal}" />
+
+
+
+
+
+  <aura:if isTrue="{!v.type == 'modal'}">
+
+    <section class="slds-modal" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" aura:id="modal" aria-hidden="false" role="dialog">
+
+      <div class="slds-modal__container" >
+        <div class="slds-modal__header">
+          <lightning:buttonIcon iconName="utility:close" size="large" class="slds-button slds-modal__close slds-button--icon-inverse" variant="bare" alternativeText="Close" onclick="{!v.closeAction}"  />
+
+          <h2 class="slds-text-heading--medium" id="modal-heading-01">{!v.header}</h2>
+
+        </div>
+        <div class="slds-modal__content slds-p-around--medium" id="modal-content-id-1">
+          {!v.content}
+        </div>
+        <aura:if isTrue="{!v.withFooter==true}">
+          <div class="slds-modal__footer">
+            {!v.footer} 
+          </div>
+        </aura:if>
+      </div>
+    </section>
+  </aura:if>
+    <aura:if isTrue="{!v.type == 'welcome-mat'}">
+
+        <section class="slds-modal slds-welcome-mat" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" aura:id="modal-welcome" aria-hidden="true" role="dialog" style="position: fixed">
+
+            <div class="slds-modal__container ">
+                <div class="slds-modal__header slds-modal__header_empty">
+                    <lightning:buttonIcon iconName="utility:close" alternativeText="Close" class="slds-button slds-modal__close slds-button--icon-inverse" variant="bare-inverse" size="large" onclick="{!v.closeAction}"/>
+                </div>
+                <div class="slds-modal__content slds-welcome-mat__content slds-grid" id="modal-content-id-1">
+                        {!v.content}
+                </div>
+            </div>
+        </section>
+    </aura:if>
+
+  <div class="slds-backdrop" aura:id="modal-backdrop"></div>
+</aura:component>

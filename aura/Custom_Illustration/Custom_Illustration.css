@@ -1,0 +1,25 @@
+.THIS.my-main-container {
+    background-color: #ffffff;
+}
+
+@media all and (min-width: 0px) {
+    .THIS .my-font-title {
+        font-weight: bold;
+        font-size: 1.2rem
+    }
+    .THIS .my-font-message {
+        font-weight: bold;
+        font-size: 0.7rem
+    }
+}
+
+@media all and (min-width: 600px) {
+    .THIS .my-font-title {
+        font-weight: bold;
+        font-size: 2rem
+    }
+    .THIS .my-font-message {
+        font-weight: bold;
+        font-size: 1rem
+    }
+}

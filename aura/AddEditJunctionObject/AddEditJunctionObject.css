@@ -1,0 +1,24 @@
+.THIS .workSpace{
+    height: 400px;
+    over-flow:auto;
+    background: rgb(255, 255, 255);
+}
+
+.THIS .tabHeight{
+    height: 505px;
+    background: rgb(255, 255, 255);
+}
+
+/**
+INT 214 Aleksandr Shcherbanyuk
+ */
+.THIS .workSpaceNotModal {
+    height: 150px;
+}
+
+/**
+INT 207 Aleksandr Shcherbanyuk
+ */
+.THIS .workSpaceTradeStep {
+    min-height: 50px;
+}

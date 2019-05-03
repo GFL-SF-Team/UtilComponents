@@ -1,0 +1,36 @@
+<!--
+@author: Dmytro Lambru
+@ticket: [INT-301]
+@date: 04.02.19
+-->
+<aura:component description="spinner with message in center">
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <aura:attribute access="public" type="String" name="message" default="" required="false" description="width in percent" />
+    <aura:attribute access="public" type="String" name="width" default="100" required="false" description="width in percent" />
+    <aura:attribute access="public" type="String" name="height" default="100" required="false" description="height in percent" />
+    <aura:attribute access="public" type="String" name="minHeight" default="200" required="false" description="min-height in px" />
+    <aura:attribute access="public" type="Boolean" name="isHidden" default="TRUE" required="false" description="Hidden by default or not" />
+
+    <!-- METHODS -->
+    <aura:method name="show" access="public" description="Show spinner" />
+    <aura:method name="hide" access="public" description="Hide spinner" />
+
+    <!-- MARKUP -->
+    <div style="{# 'width: ' +v.width+ '%; height: ' +v.height+ '%; min-height: ' +v.minHeight+ 'px' }"
+         class="{! 'slds-is-relative slds-align_absolute-center' + if(v.isHidden, ' slds-hide', '') }">
+        <!-- spinner -->
+        <div class="slds-form--compound">
+            <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+
+        <!-- message -->
+        <span style="top: 65%; position: absolute; font-weight: bolder;" class="slds-text-heading_small slds-text-color_weak">
+            {#v.message}
+        </span>
+    </div>
+</aura:component>

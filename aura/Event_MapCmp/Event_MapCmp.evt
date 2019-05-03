@@ -1,0 +1,5 @@
+<!-- c:Event_MapCmp -->
+<!-- Created by Dmytro Lambru | 18.11.2018 -->
+<aura:event type="COMPONENT" description="Event with map object">
+    <aura:attribute type="Map" name="map" required="true" description="'{key: value, key2: value2}'" />
+</aura:event>

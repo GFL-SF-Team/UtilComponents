@@ -1,0 +1,31 @@
+<!--
+@author: Dmytro Lambru
+-->
+<!-- c:Custom_Illustration -->
+<aura:component description="To show an illustration, an image with a message.">
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <!-- required attributes -->
+    <aura:attribute name="image" type="Object" required="TRUE" description="Image path, e.g. $Resource.CommunityImages + '/arrow/up.png'" access="public" />
+    <!-- not required attributes -->
+    <aura:attribute name="title" type="String" default="" required="FALSE" description="Text for the title" access="public" />
+    <aura:attribute name="message" type="String" default="" required="FALSE" description="Text for the message" access="public" />
+    <aura:attribute name="hidden" type="Boolean" default="TRUE" required="FALSE" description="Hidden or not" access="public" />
+    <aura:attribute name="imageStyle" type="String" default="" required="FALSE" description="CSS style for the image" access="public" />
+
+    <!-- METHODS -->
+    <aura:method name="show" action="{!c.show}" access="public" description="Show illustration" />
+    <aura:method name="hide" action="{!c.hide}" access="public" description="Hide illustration" />
+
+    <lightning:layoutItem aura:id="illustration" class="{! 'slds-wrap slds-align_absolute-center my-main-container ' + if(v.hidden, 'slds-hide', '') }" size="12">
+        <lightning:layoutItem class="slds-align_absolute-center" size="12" padding="around-large">
+            <img src="{# v.image }" alt="Image" style="{#v.imageStyle}"/>
+        </lightning:layoutItem>
+        <lightning:layoutItem class="slds-align_absolute-center" size="12">
+            <span class="slds-text-heading_large slds-text-color_weak my-font-title">{# v.title }</span>
+        </lightning:layoutItem>
+        <lightning:layoutItem class="slds-align_absolute-center" size="12" padding="around-small">
+            <span class="slds-text-heading_small slds-text-color_weak my-font-message">{# v.message }</span>
+        </lightning:layoutItem>
+    </lightning:layoutItem>
+</aura:component>

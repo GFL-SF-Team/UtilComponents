@@ -1,0 +1,26 @@
+<!-- c:Utils_PermissionCheckingService -->
+<!--
+@author: Dmytro Lambru
+@date: 17.11.2018
+@ticket: [INT-288]
+@history: [INT-316] Dmytro Lambru 30.11.18 - Changed keyword 'sales' on 'readonly' and check result 'isSales' on 'isReadonly' (related [INT-288])
+-->
+<aura:component controller="Utils_PermissionCheckingServiceCtrl"
+                description="This component is to check the user profile or access rights to objects.
+                             If this component is used in many components that are on the same page,
+                             and if the same values are indicated for the profile or for the objects,
+                             then this component will send just one request to the org for checking.">
+    <!-- SCRIPTS -->
+    <ltng:require scripts="{!$Resource.LightningUtils}"
+                  afterScriptsLoaded="{!c.doInit}"/>
+
+    <!-- ATTRIBUTES -->
+    <!-- public -->
+    <aura:attribute access="public" type="List" name="profileList" required="FALSE" default="[]" description="Profiles keywords to check"/>
+    <aura:attribute access="public" type="Map" name="profileCheckResultMap" required="FALSE" default="{}" description="Object with checked profiles from profileList e.g. {isAdmin: false, isReadonly: true}"/>
+
+    <!-- EVENTS -->
+    <aura:registerEvent name="onAfterChecking" type="c:Event_SimpleSignalCmp" />
+
+    <!-- TODO: object access checking -->
+</aura:component>

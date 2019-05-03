@@ -1,0 +1,144 @@
+<!--
+@author: Dmytro Lambru
+@date: 29.10.2018
+@ticket: [INT-261]
+@history: [COM-84] Dmytro Lambru 08.12.18 - Added search by options ability
+-->
+<aura:component access="global" description="Multi-select drop-down list. Hold down the shift button for multiple selections (multiple selection enabled with mobile phone by default).
+                                             'values' is returned on select through event 'onSelectChange' (use event.getParam('map'))">
+    <!-- SCRIPTS -->
+    <ltng:require scripts="{! $Resource.LightningUtils }" afterScriptsLoaded="{!c.init}" />
+
+    <!-- ATTRIBUTES -->
+    <!-- public required="TRUE" -->
+    <aura:attribute type="Object" name="options" required="TRUE" access="public" description="List with options for drop-down (e.g. [{'label': Dmytro, 'value': dmytro}, {'label': Mama, 'value': mama, selected: true}]),
+                                                                                            you can specify selected by defaults 'selected: true', 'values' is returned on select by event with name 'onSelectChange'
+                                                                                            e.g. {dropdown: ['dmytro', 'mama']} where 'dropdown' is default 'name' attribute,
+                                                                                            set attribute 'name' = 'Field__c' if necessary to receive {Field__c: ['dmytro', 'mama']}.
+                                                                                            Use 'onMultiSelectChange' event now" />
+    <!-- public required="FALSE" -->
+    <aura:attribute access="public" type="String" name="name" required="FALSE" default="dropdown" description="Name for drop-down field" />
+    <aura:attribute access="public" type="String" name="label" required="FALSE" default="Select options" description="Label for drop-down" />
+    <aura:attribute access="public" type="String" name="labelForAll" required="FALSE" default="All" description="Label for 'All' option" />
+    <aura:attribute access="public" type="String" name="defaultInfoText" required="FALSE" default="Select an option ..." description="Text when nothing is selected in the drop-down" />
+    <aura:attribute access="public" type="String" name="placeholderForSearchByOptions" required="FALSE" default="Type to search ..." description="Placeholder text for search input by options" />
+    <aura:attribute access="public" type="String" name="optionValueType" required="FALSE" default="string" description="Data type for option value. string(default) / integer - implemented" />
+    <aura:attribute access="public" type="Integer" name="width" required="FALSE" default="100" description="Drop-down width value in '%'" />
+    <aura:attribute access="public" type="Integer" name="listLength" required="FALSE" default="5" description="Drop-down list height. Can be in 3 values such as 5, 7, 10" />
+    <aura:attribute access="public" type="Boolean" name="disabled" required="FALSE" default="FALSE" description="To disable dropdown and make it not active for user" />
+    <aura:attribute access="public" type="Boolean" name="isLabelHidden" required="FALSE" default="false" description="To hide label if needed" />
+    <aura:attribute access="public" type="Boolean" name="isAllEnable" required="FALSE" default="FALSE" description="To display 'All' option in list" />
+    <aura:attribute access="public" type="Boolean" name="isAllByDefault" required="FALSE" default="FALSE" description="All selected by default" />
+    <aura:attribute access="public" type="Boolean" name="isMultiselectEnable" required="FALSE" default="TRUE" description="Multi-selection ability" />
+    <aura:attribute access="public" type="Boolean" name="isAlwaysMultiselect" required="FALSE" default="FALSE" description="Multiple-selection is always enable" />
+    <aura:attribute access="public" type="Boolean" name="isAutoHideList" required="FALSE" default="TRUE" description="Hide drop-down list when mouse is not hover" />
+    <aura:attribute access="public" type="Boolean" name="isShowSearchByOptions" required="FALSE" default="FALSE" description="To show search input by options" />
+    <aura:attribute access="public" type="Boolean" name="isLabelLeft" required="FALSE" default="FALSE" description="Changes the position of the label to the left of the drop-down list" />
+    <!--<aura:attribute type="Boolean" name="isRequired" required="FALSE" access="public" default="FALSE" description="Ability to make drop-down required" />-->
+    <!-- private -->
+    <aura:attribute access="private" type="List" name="options_" default="[]" description="Options for processing" />
+    <aura:attribute access="private" type="String" name="infoText" description="To dynamically change input placeholder" />
+    <aura:attribute access="private" type="Boolean" name="mouseHover" default="FALSE" description="Mouse hovering over the drop-down" />
+    <aura:attribute access="public" type="Boolean" name="isDropDownOpen" default="FALSE" description="To check drop-down is open or not. (access=public because used in window.addEventListener())" />
+    <aura:attribute access="private" type="Boolean" name="isFocusedDropDown" default="FALSE" description="Focusing on drop-down or not" />
+    <aura:attribute access="private" type="Boolean" name="isFocusedDropDownList" default="FALSE" description="Focusing on drop-down list or not" />
+    <aura:attribute access="private" type="Boolean" name="isShowSearchByOptionsClearButton" default="FALSE" description="Show or hide button to clear the input" />
+
+    <!-- EVENTS -->
+    <!-- DEPRECATED - use 'onMultiSelectChange' event -->
+    <aura:registerEvent name="onSelectChange" type="c:Event_MapCmp" />
+
+    <aura:registerEvent name="onMultiSelectChange" type="c:Event_MapCmp" />
+
+    <!-- HANDLERS -->
+    <aura:handler name="change" value="{!v.options}" action="{!c.reInit}"/>
+
+    <!-- METHODS -->
+    <aura:method access="global" name="deselectAllOptions" description="To reset the selection in all options" />
+    <aura:method access="global" name="getListWithSelectedOptions" description="To get list with all selected options in dropdown" />
+
+    <!-- MARKUP -->
+    <div class="{! 'slds-form-element' + if(v.isLabelLeft, ' slds-form-element_horizontal', '') }" style="{!'width: ' + v.width + '%;'}">
+        <!-- DROP-DOWN LABEL -->
+        <label class="{# 'slds-form-element__label' + if(v.isLabelHidden == TRUE, ' slds-hide' , '') }">
+                {#v.label}
+        </label>
+
+        <!-- DROP-DOWN -->
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class="{! 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click' + if(v.isDropDownOpen, ' slds-is-open', '') }" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                    <!-- START | DROP-DOWN INPUT -->
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <input aura:id="#main_input" class="slds-input slds-combobox__input slds-truncate" readonly="readonly"
+                               type="text" aria-controls="listbox-id-1" autoComplete="off" role="textbox"
+                               disabled="{! if(v.disabled, 'disabled', '') }"
+                               placeholder="{!v.infoText}"
+                               onclick="{!c.handleDropDownClick}"
+                               onfocus="{!c.handleDropDownFocusChange}"
+                               onblur="{!c.handleDropDownFocusChange}"
+                               onmouseenter="{!c.handleMouseEnter}"
+                               onmouseleave="{!c.handleMouseLeave}" />
+
+                        <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right">
+                            <lightning:icon iconName="{! if(v.isDropDownOpen, 'utility:up', 'utility:down') }" size="x-small" class="slds-icon slds-icon slds-icon_x-small slds-icon-text-default" />
+                        </span>
+                    </div>
+                    <!-- END | DROP-DOWN INPUT -->
+
+                    <!-- START | FIXED DROP-DOWN LIST -->
+                    <div id="listbox-id-1" aura:id="#fixed_drop_down_list" class="{# 'my_outline_none my_fixed_dropdown slds-dropdown_fluid slds-dropdown_length-' + v.listLength }" tabindex="0" role="listbox"
+                         onfocus="{!c.handleDropDownListOnFocus}"
+                         onblur="{!c.handleDropDownListOnBlur}"
+                         onmouseenter="{!c.handleMouseEnter}"
+                         onmouseleave="{!c.handleMouseLeave}">
+
+                        <!-- START | OPTION SEARCH INPUT -->
+                        <div class="{# 'slds-align--absolute-center slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right' + if(v.isShowSearchByOptions == TRUE, '', ' slds-hide') }"
+                             style="width: 95%" role="none">
+                            <input aura:id="searchByOptionInput" class="slds-size--1-of-1 slds-input" type="search" placeholder="{#v.placeholderForSearchByOptions}"
+                                   onfocus="{!c.handleDropDownListOnFocus}"
+                                   onblur="{!c.handleDropDownListOnBlur}"
+                                   oninput="{!c.handleSearchByOptionsOnInput}" />
+
+                            <!-- INPUT ICON -->
+                            <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_left">
+                                <lightning:icon iconName="utility:search" size="xx-small" class="slds-icon slds-icon_xx-small slds-icon-text-default"/>
+                            </span>
+                            <!-- INPUT BUTTON -->
+                            <button class="{! 'slds-button slds-button_icon slds-input__icon slds-input__icon_right' + if(v.isShowSearchByOptionsClearButton == TRUE, '', ' slds-hide') }"
+                                    onclick="{!c.onBtnClearSearchByOptionsInputValue}"
+                                    onfocus="{!c.handleDropDownListOnFocus}" >
+
+                                <lightning:icon iconName="utility:clear" size="xx-small" class="slds-button__icon" alternativeText="Clear the text" />
+                            </button>
+                        </div>
+                        <!-- END | OPTION SEARCH INPUT -->
+
+                        <!-- START | OPTIONS LIST -->
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <aura:iteration items="{!v.options_}" var="option">
+                                <li class="{! 'slds-listbox__item' + if(option.isHidden == TRUE, ' slds-hide', '')}" data-value="{!option.value}" data-selected="{!option.selected}" role="presentation"
+                                    onclick="{!c.handleSelection}">
+
+                                    <div class="{! 'slds-media slds-listbox__option_plain slds-media_small slds-listbox__option ' + if(option.selected == TRUE, ' slds-is-selected', '') }" role="option">
+                                        <span class="slds-media__figure">
+                                            <lightning:icon iconName="utility:check" size="x-small" class="slds-icon-utility-check slds-current-color slds-listbox__icon-selected slds-icon_container" />
+                                        </span>
+                                        <span class="slds-media__body">
+                                            <span style="user-select: none;" class="slds-truncate my_noselect" title="{!option.label}">
+                                                &nbsp;{!option.label}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </aura:iteration>
+                        </ul>
+                        <!-- END | OPTIONS LIST -->
+                    </div>
+                    <!-- END | DROP-DOWN LIST -->
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

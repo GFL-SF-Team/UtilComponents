@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="fire when user user custom searchComponent">
+    <aura:attribute name="recordId" type="String"  access="global"/>
+    <aura:attribute name="fieldApi" type="String"  access="global"/>
+    <aura:attribute name="recordParam" type="Map"  access="global"/>
+</aura:event>

@@ -1,0 +1,15 @@
+<aura:component description="Utils_fieldsSection">
+	<aura:attribute name="sectionLabel" type="String" access="public"/>
+
+    <div class="slds-section slds-is-open">
+        <h3 class="slds-section__title">
+            <button aria-controls="expando-unique-id" aria-expanded="true" class="slds-button slds-section__title-action">
+                <span class="slds-truncate" title="{#v.sectionLabel}">{#v.sectionLabel}</span>
+            </button>
+        </h3>
+        <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding-bottom:2rem;">
+            {!v.body}
+        </div>
+    </div>
+
+</aura:component>
