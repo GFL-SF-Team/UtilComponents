@@ -33,7 +33,7 @@ public without sharing class Utils_PermissionCheckingServiceCtrl {
 		Map<String, Boolean> profileToCheckResultMap = new Map<String, Boolean>();
 
 		/* current user profile */
-		Profile userProfile = DataAccessor.getProfileById(UserInfo.getProfileId())[0];
+		Profile userProfile = DataAccessor.getProfileInfoByIdOrName(UserInfo.getProfileId());
 
 		/* check profiles */
 		for (String profileKeyWord : profileKeyWordList) {
