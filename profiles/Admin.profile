@@ -49,6 +49,10 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>Utils</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>Utils_PermissionCheckingServiceCtrl</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -56,12 +60,71 @@
         <apexClass>Utils_PermissionCheckingServiceCtrlTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <!--<custom>false</custom>-->
+    <custom>false</custom>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Body__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Classes__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Solutions_Log__c.Comment__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Line__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Message__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Method__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Solutions_Log__c.Priority__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Solutions_Log__c.Status__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Solutions_Log__c.Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <layoutAssignments>
+    <layout>Solutions_Log__c-Solutions_Log Layout</layout>
+    </layoutAssignments>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>true</modifyAllRecords>
+        <object>Solutions_Log__c</object>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
     <pageAccesses>
         <apexPage>UserSessionId</apexPage>
         <enabled>true</enabled>
     </pageAccesses>
     <!--<userLicense>Salesforce</userLicense>-->
+
 
     <!---->
     <!--<userPermissions>-->
