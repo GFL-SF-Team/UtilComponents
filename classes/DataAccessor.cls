@@ -70,13 +70,13 @@ public with sharing class DataAccessor {
 	 *
 	 * PS: Make sure that you enabled Allow users to relate a contact to multiple company checkbox in Account Settings
     */
-	public static List<AccountContactRelation> getAllContactsAssociatedWithAccount(String accountId){
-
-		return DataAccessorHelper.getDataFromOrg('SELECT  ContactId ' +
-				'FROM AccountContactRelation ' +
-				'WHERE AccountId = \'' + String.escapeSingleQuotes(accountId) + '\' '+
-				'LIMIT 50000');
-	}
+//	public static List<AccountContactRelation> getAllContactsAssociatedWithAccount(String accountId){
+//
+//		return DataAccessorHelper.getDataFromOrg('SELECT  ContactId ' +
+//				'FROM AccountContactRelation ' +
+//				'WHERE AccountId = \'' + String.escapeSingleQuotes(accountId) + '\' '+
+//				'LIMIT 50000');
+//	}
 
 
 	/*
