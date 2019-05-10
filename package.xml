@@ -69,21 +69,9 @@
         <name>CustomField</name>
     </types>
     <types>
-        <members>Solutions_Log__c</members>
-        <name>CustomObject</name>
-    </types>
-    <types>
-    <members>Solutions_Log__c-Solutions_Log Layout</members>
+        <members>Solutions_Log__c-Solutions_Log Layout</members>
         <name>Layout</name>
     </types>
-    <types>
-    <members>Solutions_Log__c.All</members>
-        <name>ListView</name>
-    </types>
-    <!--<types>-->
-        <!--<members>Solutions_Log__c</members>-->
-        <!--<name>SharingRules</name>-->
-    <!--</types>-->
     <types>
         <members>IllustrationImage</members>
         <members>LightningUtils</members>
