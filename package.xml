@@ -13,6 +13,7 @@
         <members>LightningResult</members>
         <members>Model</members>
         <members>Utills</members>
+        <members>Utils</members>
         <members>Utils_PermissionCheckingServiceCtrl</members>
         <members>Utils_PermissionCheckingServiceCtrlTest</members>
         <name>ApexClass</name>
@@ -48,8 +49,28 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>Solutions_Log__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>Admin</members>
         <name>Profile</name>
+    </types>
+    <types>
+        <members>Solutions_Log__c.Body__c</members>
+        <members>Solutions_Log__c.Classes__c</members>
+        <members>Solutions_Log__c.Comment__c</members>
+        <members>Solutions_Log__c.Line__c</members>
+        <members>Solutions_Log__c.Message__c</members>
+        <members>Solutions_Log__c.Method__c</members>
+        <members>Solutions_Log__c.Priority__c</members>
+        <members>Solutions_Log__c.Status__c</members>
+        <members>Solutions_Log__c.Type__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Solutions_Log__c-Solutions_Log Layout</members>
+        <name>Layout</name>
     </types>
     <types>
         <members>IllustrationImage</members>
