@@ -101,7 +101,7 @@ System.debug(query);
 
             }
 
-            if ( !Utills.schemaCheckObjectIsCreateable(relatedObjectWrapper.junctionObject) ) {
+            if ( !Utils.schemaCheckObjectIsCreateable(relatedObjectWrapper.junctionObject) ) {
                 //Rollback to the previous values
                 Database.rollback(databaseSavePoint);
                 throw new AuraHandledException('You have no rights to do this!');
@@ -161,7 +161,7 @@ System.debug(query);
 
         String objectName = getObjectApiName(junctionRecordId);
 
-        if ( !Utills.schemaCheckObjectIsDeletable(objectName) ) {
+        if ( !Utils.schemaCheckObjectIsDeletable(objectName) ) {
             //Rollback to the previous values
             Database.rollback(databaseSavePoint);
             throw new AuraHandledException('You have no rights to do this!');
