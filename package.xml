@@ -12,7 +12,6 @@
         <members>L_SearchController</members>
         <members>LightningResult</members>
         <members>Model</members>
-        <members>Utills</members>
         <members>Utils</members>
         <members>Utils_PermissionCheckingServiceCtrl</members>
         <members>Utils_PermissionCheckingServiceCtrlTest</members>
