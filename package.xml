@@ -49,14 +49,6 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
-        <members>Solutions_Log__c</members>
-        <name>CustomObject</name>
-    </types>
-    <types>
-        <members>Admin</members>
-        <name>Profile</name>
-    </types>
-    <types>
         <members>Solutions_Log__c.Body__c</members>
         <members>Solutions_Log__c.Classes__c</members>
         <members>Solutions_Log__c.Comment__c</members>
@@ -69,8 +61,26 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Solutions_Log__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
         <members>Solutions_Log__c-Solutions_Log Layout</members>
         <name>Layout</name>
+    </types>
+    <types>
+        <members>Admin_MA</members>
+        <members>Admin_VA</members>
+        <members>Base_Editor</members>
+        <members>Base_Grand</members>
+        <name>PermissionSet</name>
+    </types>
+    <types>
+        <members>Admin</members>
+        <members>Base Admin</members>
+        <members>Base User</members>
+        <members>Identity User</members>
+        <name>Profile</name>
     </types>
     <types>
         <members>IllustrationImage</members>
