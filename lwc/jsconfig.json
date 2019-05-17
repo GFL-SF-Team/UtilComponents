@@ -5,6 +5,12 @@
         "paths": {
             "c/util_Lookup": [
                 "util_Lookup/util_Lookup.js"
+            ],
+            "c/utils": [
+                "utils/utils.js"
+            ],
+            "c/Utils": [
+                "Utils/Utils.js"
             ]
         }
     },

@@ -1,36 +1,30 @@
-import { LightningElement, api, track } from 'lwc';
+/**
+ * @author: Dmytro Lambru
+ */
+import { LightningElement, api } from 'lwc';
+import {addClassById, removeClassById} from 'c/Utils';
+import helper from './util_LookupHelper';
 
 export default class Util_Lookup extends LightningElement {
-    @api isLabelHidden = false;
-    @track labelClass = 'slds-form-element__label';
+    @api label = 'Relate to'; // label text
+    @api isLabelHidden = false; // to hide label if needed
 
-    constructor() {
-        super();
-        
-        this.defineLabelClass();
+    connectedCallback() {        
+        // helper.setClassForLabel(this);
     }
 
-    defineLabelClass() {        
-        this.isLabelHidden = true;
-        console.log(this.labelClass);
+    disconnectedCallback() {}
 
-        if (this.isLabelHidden) {
-            console.log(this.labelClass);
-            
-            this.labelClas = this.labelClas + ' slds-hide';
-            console.log(this.labelClass);
-        }
+    handleInputFocus() {
+        addClassById(this, '#lookup_container', 'slds-is-open');
     }
 
-    // defineLabelClass() {
-    //     let classString = 'slds-form-element__label';
+    handleInputBlur() {
+        removeClassById(this, '#lookup_container', 'slds-is-open');
+    }
+
+    handleInputChange() {
+        console.error('LOL');
         
-    //     this.isLabelHidden = true;
-
-    //     if (this.isLabelHidden) {
-    //         classString += ' slds-hide';
-    //     }
-
-    //     return classString;
-    // }
+    }
 }
