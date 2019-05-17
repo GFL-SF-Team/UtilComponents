@@ -9,8 +9,11 @@
             "c/utils": [
                 "utils/utils.js"
             ],
-            "c/Utils": [
-                "Utils/Utils.js"
+            "c/Util_Lookup": [
+                "Util_Lookup/Util_Lookup.js"
+            ],
+            "c/Utilss": [
+                "Utilss/Utilss.js"
             ]
         }
     },
