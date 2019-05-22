@@ -11,17 +11,33 @@
             <div class="slds-combobox_container">
                 <div data-id="lookup_container" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
                     <!-- INPUT -->
-                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                    <div style="position: relative;" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
                         <input type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
-                            placeholder="Search..."
-                            onchange={handleInputChange}
+                            placeholder="Lookup for ..."
+                            onkeyup={handleInputChange}
                             onblur={handleInputBlur}
                             onfocus={handleInputFocus}
                         />
 
-                        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                        <span class="slds-icon_container slds-input__icon slds-input__icon_left">
                             <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
                         </span>
+
+                        <div class="slds-input__icon-group slds-input__icon-group_right">
+                            <!-- <lightning-icon icon-name="utility:down" alternative-text="Search icon" size="x-small"></lightning-icon> -->
+                            <div class="slds-spinner_container">
+                                <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
+                                    <span class="slds-assistive-text">Loading</span>
+                                    <div class="slds-spinner__dot-a"></div>
+                                    <div class="slds-spinner__dot-b"></div>
+                                </div>
+                            </div>
+                            <!-- <lightning-button-icon icon-name="utility:clear" variant="bare" alternative-text="Delete" class="slds-input__icon"></lightning-button-icon> -->
+
+                            <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon">
+                                <lightning-icon icon-name="utility:clear" alternative-text="Clear" size="xx-small"></lightning-icon>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- LIST -->

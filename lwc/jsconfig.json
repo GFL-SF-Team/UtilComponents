@@ -3,17 +3,14 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
-            "c/util_Lookup": [
-                "util_Lookup/util_Lookup.js"
+            "c/lookupContainer": [
+                "lookupContainer/lookupContainer.js"
+            ],
+            "c/utilLookup": [
+                "utilLookup/utilLookup.js"
             ],
             "c/utils": [
                 "utils/utils.js"
-            ],
-            "c/Util_Lookup": [
-                "Util_Lookup/Util_Lookup.js"
-            ],
-            "c/Utilss": [
-                "Utilss/Utilss.js"
             ]
         }
     },

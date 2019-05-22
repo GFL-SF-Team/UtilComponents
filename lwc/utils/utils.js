@@ -5,8 +5,7 @@
 * @return {Boolean}
 */
 export function isObject(obj) {
-    const type = typeof obj;
-    return type === 'function' || type === 'object' && !!obj;
+    return !!obj && typeof obj === 'object';
 }
 
 /*
@@ -23,7 +22,7 @@ export function addElementClass(cmp, identifier, className) {
         element.classList.add(className);
     }
     else {
-        console.error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
+        throw Error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
     }
 }
 
@@ -41,6 +40,6 @@ export function removeElementClass(cmp, identifier, className) {
         element.classList.remove(className);
     }
     else {
-        console.error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
+        throw Error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
     }
 }
