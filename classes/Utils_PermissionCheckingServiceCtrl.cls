@@ -48,7 +48,7 @@ public without sharing class Utils_PermissionCheckingServiceCtrl {
 			}
 
 			/* add to keyword 'is' e.g. 'isAdministrator' or 'isReadonly' and put check result */
-			String convertedString = Utills.firstCharacterToUppercase(profileKeyWord);
+			String convertedString = Utils.firstCharacterToUppercase(profileKeyWord);
 			profileToCheckResultMap.put('is' + convertedString, checkResult);
 		}
 

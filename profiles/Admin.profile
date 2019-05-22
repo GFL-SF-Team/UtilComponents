@@ -45,10 +45,6 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>Utills</apexClass>
-        <enabled>false</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>Utils</apexClass>
         <enabled>false</enabled>
     </classAccesses>

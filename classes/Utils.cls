@@ -155,7 +155,7 @@ public class Utils {
 
 	/*
 	 * @description: to get user session id from VF page, because 'UserInfo.getSessionId()' doesn't work with @AuraEnabled
-	 * @test: No - 'System.VisualforceException' with message "Methods defined as TestMethod do not support getContent call" when call Utills.getUserSessionIdFromVFPage() in tests
+	 * @test: No - 'System.VisualforceException' with message "Methods defined as TestMethod do not support getContent call" when call Utils.getUserSessionIdFromVFPage() in tests
 	 */
 	/*
 	 public static String getUserSessionIdFromVFPage() {
@@ -289,8 +289,8 @@ public class Utils {
 			}
 
 		} catch(Exception exc) {
-			Utils.createConsoleLog('Exception > Utills.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return options;
@@ -321,8 +321,8 @@ public class Utils {
 			}
 
 		} catch(Exception exc) {
-			Utils.createConsoleLog('Exception > Utills.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return options;
@@ -348,8 +348,8 @@ public class Utils {
 			}
 
 		} catch(Exception exc) {
-			Utils.createConsoleLog('Exception > Utills.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.schemaCheckPicklistValue() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'schemaCheckPicklistValue', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return result;
@@ -467,8 +467,8 @@ public class Utils {
 			}
 
 		} catch(Exception exc) {
-			Utils.createConsoleLog('Exception > Utills.schemaGetObjectRecordTypeIdByDeveloperName() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'schemaGetObjectRecordTypeIdByDeveloperName', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.schemaGetObjectRecordTypeIdByDeveloperName() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'schemaGetObjectRecordTypeIdByDeveloperName', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return result;
@@ -488,8 +488,8 @@ public class Utils {
 			recordTypeId = recordTypeInfo.getRecordTypeId();
 
 		} catch(Exception exc) {
-			Utils.createConsoleLog('Exception > Utills.schemaGetObjectRecordTypeIdByDeveloperName() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'schemaGetObjectRecordTypeIdByDeveloperName', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.schemaGetObjectRecordTypeIdByDeveloperName() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'schemaGetObjectRecordTypeIdByDeveloperName', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return recordTypeId;
@@ -585,8 +585,8 @@ public class Utils {
 				}
 			}
 		}catch(Exception exc){
-			Utils.createConsoleLog('Exception > Utills.getAllUsersFromPublicGroup() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
-			Utils.createErrorLog('Utills', 'getAllUsersFromPublicGroup', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('Exception > Utils.getAllUsersFromPublicGroup() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createErrorLog('Utils', 'getAllUsersFromPublicGroup', exc.getLineNumber(), 'Error Message: ' + exc.getMessage());
 		}
 
 		return userIdFromPublicGroupSet;
@@ -619,7 +619,7 @@ public class Utils {
 			insert newLog;
 
 		} catch (DmlException exc) {
-			Utils.createConsoleLog('DmlException > Utills.createLog() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
+			Utils.createConsoleLog('DmlException > Utils.createLog() >>> on line ' + exc.getLineNumber() + ' >>> Error Message: ' + exc.getMessage());
 		}
 	}
 
