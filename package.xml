@@ -48,7 +48,9 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
-        <members>util_Lookup</members>
+        <members>lookupContainer</members>
+        <members>utilLookup</members>
+        <members>utils</members>
         <name>LightningComponentBundle</name>
     </types>
     <types>
