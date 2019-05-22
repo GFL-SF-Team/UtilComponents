@@ -12,6 +12,8 @@
         <members>L_SearchController</members>
         <members>LightningResult</members>
         <members>Model</members>
+        <members>Util_LookupController</members>
+        <members>Util_LookupControllerTest</members>
         <members>Utils</members>
         <members>Utils_PermissionCheckingServiceCtrl</members>
         <members>Utils_PermissionCheckingServiceCtrlTest</members>
