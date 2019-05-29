@@ -5,8 +5,15 @@
  * @description: Controller for 'utilLookup' LWC
  */
 public with sharing class Util_LookupController {
+    private static LightningResult result = new LightningResult();
 
-    public Util_LookupController() {
+	@AuraEnabled(cacheable=true)
+	public static LightningResult lookup(String stringToSearch) {
 
-    }
+		if (false) {
+			return result.setError(401);
+		}
+
+		return result.setResult( JSON.serialize(true) );
+	}
 }

@@ -4,7 +4,9 @@
  */
 export default new class UtilLookupHelper {
 
-    setComponentStyle(cmp) {
-        // cmp.classList.add(`my_width_${cmp.componentWidth}`);
-    }
+
+
+    // setComponentStyle(cmp) {
+    //     cmp.classList.add(`my_width_${cmp.componentWidth}`);
+    // }
 }

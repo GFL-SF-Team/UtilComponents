@@ -1,7 +1,7 @@
 <template>
     <div class="slds-form-element">
         <!-- LABEL -->
-        <template if:true={isLabelDisplayed}>
+        <template if:false={isLabelHidden}>
             <label class="slds-form-element__label" for="combobox-id-1">
                 {label}
             </label>
