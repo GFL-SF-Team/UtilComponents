@@ -1,38 +1,57 @@
 <template>
     <div class="slds-form-element">
         <!-- LABEL -->
-        <template if:false={isLabelHidden}>
+        <template if:false={config.isLabelHidden}>
             <label class="slds-form-element__label" for="combobox-id-1">
-                {label}
+                {config.label}
             </label>
         </template>
 
         <div class="slds-form-element__control">
+            <!-- SELECTED -->
+            <!-- <div class="slds-combobox_container slds-has-selection">
+                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                    <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon">
+                        <lightning-icon icon-name="standard:account" alternative-text="Icon"></lightning-icon>
+                    </span>
+
+                    <input type="text" class="slds-input slds-combobox__input slds-combobox__input-value" autocomplete="off"
+                        readonly
+                        value="Salesforce.com, Inc."
+                    />
+
+                    <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right">
+                        <lightning-icon icon-name="utility:close" alternative-text="Remove" size="x-small"></lightning-icon>
+                    </button>
+                </div>
+            </div> -->
+
+            <!-- NOT SELECTED -->
             <div class="slds-combobox_container">
                 <div data-id="lookup_container" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
                     <!-- INPUT -->
                     <div style="position: relative;" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                        <span class="slds-icon_container slds-input__icon slds-input__icon_left">
+                            <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
+                        </span>
+
                         <input type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
-                            placeholder="Lookup for ..."
+                            placeholder={config.placeholder}
                             onkeyup={handleInputChange}
                             onblur={handleInputBlur}
                             onfocus={handleInputFocus}
                         />
 
-                        <span class="slds-icon_container slds-input__icon slds-input__icon_left">
-                            <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
-                        </span>
-
                         <div class="slds-input__icon-group slds-input__icon-group_right">
-                            <!-- <lightning-icon icon-name="utility:down" alternative-text="Search icon" size="x-small"></lightning-icon> -->
-                            <div class="slds-spinner_container">
-                                <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
-                                    <span class="slds-assistive-text">Loading</span>
-                                    <div class="slds-spinner__dot-a"></div>
-                                    <div class="slds-spinner__dot-b"></div>
+                            <template if:true={isLoading}>
+                                <div class="slds-spinner_container">
+                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
+                                        <span class="slds-assistive-text">Loading</span>
+                                        <div class="slds-spinner__dot-a"></div>
+                                        <div class="slds-spinner__dot-b"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <!-- <lightning-button-icon icon-name="utility:clear" variant="bare" alternative-text="Delete" class="slds-input__icon"></lightning-button-icon> -->
+                            </template>
 
                             <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon">
                                 <lightning-icon icon-name="utility:clear" alternative-text="Clear" size="xx-small"></lightning-icon>
@@ -41,10 +60,10 @@
                     </div>
 
                     <!-- LIST -->
-                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                    <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
                             <li role="presentation" class="slds-listbox__item">
-                                <div id="option1" class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
                                     <!-- ICON -->
                                     <span class="slds-media__figure slds-listbox__option-icon">
                                         <span class="slds-icon_container slds-icon-standard-account">
