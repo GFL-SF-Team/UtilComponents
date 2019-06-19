@@ -3,8 +3,11 @@
 // !!! - Do not add a function that will be used only in your application.
 // !!! - Add a full comment block
 
-import { isObject, isUndefinedOrNull } from './validationUtils';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import * as $Validation from './validationUtils';
+
+// redirect all
+export * from './validationUtils';
 
 /**
  * @author Dmytro Lambru
@@ -16,7 +19,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export function addElementClass(cmp, identifier, className) {
     const element = cmp.template.querySelector(identifier);
 
-    if (isObject(element)) {
+    if ($Validation.isObject(element)) {
         element.classList.add(className);
     } else {
         throw Error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
@@ -33,10 +36,10 @@ export function addElementClass(cmp, identifier, className) {
 export function removeElementClass(cmp, identifier, className) {
     const element = cmp.template.querySelector(identifier);
 
-    if (isObject(element)) {
+    if ($Validation.isObject(element)) {
         element.classList.remove(className);
     } else {
-        throw Error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
+        throw Error(`Could not find element with identifier: '${identifier}' and find result is 'undefined'`);
     }
 }
 
@@ -86,7 +89,7 @@ export function reduceErrors(errors) {
  */
 export function convertToArrayIfNotArray(value) {
 
-    if (isUndefinedOrNull(value)) {
+    if ($Validation.isUndefinedOrNull(value)) {
         value = [];
     } else if (!Array.isArray(value)) {
         value = [value];
@@ -163,7 +166,7 @@ export function showCriticalErrorToast(cmp, code) {
     const variant = 'error';
     const mode = 'sticky';
 
-    if (!isUndefinedOrNull(code)) {
+    if (!$Validation.isUndefinedOrNull(code)) {
         message = `Please let us know about it, error code: ${code}`;
     }
 

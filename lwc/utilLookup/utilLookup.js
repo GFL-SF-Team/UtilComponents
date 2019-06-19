@@ -4,8 +4,8 @@
  * @date: 05.2019
  */
 import { LightningElement, api, track } from 'lwc';
-import { addElementClass, removeElementClass } from 'c/utils';
 import helper from './utilLookupHelper';
+import { addElementClass, removeElementClass, isObject } from 'c/utils';
 
 export default class UtilLookup extends LightningElement {
     // public
@@ -13,7 +13,10 @@ export default class UtilLookup extends LightningElement {
     get config() {
         return this._config;
     }
+
     set config(value) {
+        if (!isObject(value)) return;
+
         this._config = { ...this.defaultConfig, ...value };
     }
 
@@ -27,13 +30,19 @@ export default class UtilLookup extends LightningElement {
         label: 'Lookup for', // label text
         isLabelHidden: false, // to hide label if needed
         placeholder: "Lookup for ...", // placeholder for input field
+        listSize: 5,
     }
 
     connectedCallback() {
         console.error('RUN connectedCallback()');
+        // const listContainerClass = `slds-dropdown_length-with-icon-${this.config.listSize}`;
+
+        // addElementClass(this, '[data-id="list_container"]', listContainerClass);
     }
 
     renderedCallback() {
+        helper.setListSizeClass(this);
+
         console.error('RUN renderedCallback()');
     }
 
