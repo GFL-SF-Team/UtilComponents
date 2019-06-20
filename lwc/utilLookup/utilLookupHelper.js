@@ -8,9 +8,12 @@ import lookup from '@salesforce/apex/Util_LookupController.lookup';
 
 export default new class UtilLookupHelper {
 
-    doLookup(cmp) {
+    doLookup(cmp, stringToSearch) {
 
-        lookup()
+        lookup({
+            stringToSearch,
+            searchConfigJson: JSON.stringify(cmp.config.searchConfigMap)
+        })
             .then((response) => {
 
                 if (response.success) {
@@ -33,7 +36,7 @@ export default new class UtilLookupHelper {
         cmp.isLoading = isLoading;
     }
 
-    setListSizeClass(cmp) {
+    setListLengthClass(cmp) {
         const listContainerClass = `slds-dropdown_length-with-icon-${cmp.config.listSize}`;
 
         addElementClass(cmp, '[data-id="list_container"]', listContainerClass);

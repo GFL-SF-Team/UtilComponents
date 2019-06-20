@@ -17,7 +17,7 @@ export default class UtilLookup extends LightningElement {
     set config(value) {
         if (!isObject(value)) return;
 
-        this._config = { ...this.defaultConfig, ...value };
+        this._config = { ...this.defaultConfig, ...this._config, ...value };
     }
 
     // private tracked
@@ -29,24 +29,44 @@ export default class UtilLookup extends LightningElement {
     defaultConfig = {
         label: 'Lookup for', // label text
         isLabelHidden: false, // to hide label if needed
-        placeholder: "Lookup for ...", // placeholder for input field
-        listSize: 5,
+        placeholder: 'Lookup for ...', // placeholder for input field
+        listSize: 5, // max number of list items
+
+        icon: { // icon config
+            name: 'standard:account', // SLDS icon
+            size: 'small',
+            alternativeText: 'Account'
+        },
+
+        searchConfigMap: { // config for search
+            objectName: 'Account',
+            isFieldLabelHidden: false, // to hide label for the fields
+            fieldForSearchList: ['Name', 'Site'],
+            fieldForQueryList: ['Name', 'Phone', 'Type'],
+            fieldToShowList: [
+                { fieldName: 'Name' },
+                { fieldLabel: 'Phone number', fieldName: 'Phone' }, // with custom label
+                { fieldName: 'Name' },
+            ],
+        }
     }
 
-    connectedCallback() {
-        console.error('RUN connectedCallback()');
-        // const listContainerClass = `slds-dropdown_length-with-icon-${this.config.listSize}`;
-
-        // addElementClass(this, '[data-id="list_container"]', listContainerClass);
+    // START - lifecycle hooks
+    constructor() {
+        super();
+        console.error('RUN constructor()');
     }
+
+    connectedCallback() { console.error('RUN connectedCallback()'); }
 
     renderedCallback() {
-        helper.setListSizeClass(this);
-
         console.error('RUN renderedCallback()');
+
+        helper.setListLengthClass(this);
     }
 
     disconnectedCallback() { console.error('RUN disconnectedCallback()'); }
+    // END - lifecycle hooks
 
     handleInputFocus() {
         addElementClass(this, '[data-id="lookup_container"]', 'slds-is-open');
@@ -57,12 +77,12 @@ export default class UtilLookup extends LightningElement {
     }
 
     handleInputChange(event) {
-        const value = event.target.value;
+        const stringToSearch = event.target.value;
 
         helper.switchSpinner(this, true);
-        helper.doLookup(this);
+        helper.doLookup(this, stringToSearch);
 
-        console.error(value);
+        console.error(stringToSearch);
     }
 
 }
