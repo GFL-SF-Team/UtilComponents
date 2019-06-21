@@ -40,13 +40,29 @@ export default class UtilLookup extends LightningElement {
 
         searchConfigMap: { // config for search
             objectName: 'Account',
-            isFieldLabelHidden: false, // to hide label for the fields
-            fieldForSearchList: ['Name', 'Site'],
-            fieldForQueryList: ['Name', 'Phone', 'Type'],
-            fieldToShowList: [
-                { fieldName: 'Name' },
-                { fieldLabel: 'Phone number', fieldName: 'Phone' }, // with custom label
-                { fieldName: 'Name' },
+            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'],
+            fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
+            fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
+            // fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees = 8 AND ...'
+            //     { fieldName: 'NumberOfEmployees', condition: '=', value: '8', typeOfValue: 'Integer' },
+            //     { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
+            // ],
+            fieldToShowList: [ // fields to display in the result list
+                { fieldName: 'Name', isFieldLabelHidden: false },
+                { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
+                { fieldName: 'Name', isFieldLabelHidden: false },
+            ],
+
+            recordList: [
+                {
+                    recordId: 'someId',
+                    record: {},
+                    fieldToShowList: [{
+                        fieldName: 'Name__c',
+                        fieldLabel: 'Name',
+                        value: 'Bla bla'
+                    }],
+                }
             ],
         }
     }
@@ -77,12 +93,15 @@ export default class UtilLookup extends LightningElement {
     }
 
     handleInputChange(event) {
-        const stringToSearch = event.target.value;
+        let stringToSearch = event.target.value;
+        console.error('stringToSearch', stringToSearch);
 
-        helper.switchSpinner(this, true);
+        if (!stringToSearch) {
+            //TODO: reset result list
+            return;
+        }
+
         helper.doLookup(this, stringToSearch);
-
-        console.error(stringToSearch);
     }
 
 }

@@ -9,6 +9,7 @@ import lookup from '@salesforce/apex/Util_LookupController.lookup';
 export default new class UtilLookupHelper {
 
     doLookup(cmp, stringToSearch) {
+        this.switchSpinner(this, true);
 
         lookup({
             stringToSearch,

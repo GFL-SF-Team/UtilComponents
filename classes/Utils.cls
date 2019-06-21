@@ -215,6 +215,15 @@ public class Utils {
 		return	fieldMap.get(fieldAPI).getDescribe().getLabel();
 	}
 
+	public static String getFieldLabelFormSObject(Schema.DescribeSObjectResult objectDescribe, String fieldName) {
+		/* Get all Fields of the Object */
+		Map<String, Schema.SObjectField> fieldsMap = objectDescribe.fields.getMap();
+		/* Get describe of the field by name */
+		Schema.DescribeFieldResult fieldResult = fieldsMap.get(fieldName).getDescribe();
+
+		return fieldResult.getLabel();
+	}
+
 
 	/*
 	 * @description: Verification of rights for the current user
@@ -645,7 +654,7 @@ public class Utils {
 	}
 
 
-	//********************************************* Work with Exception ***************************************************//
+	//********************************************* START - Work with Exception ***************************************************//
 
 	/*
 	 * @description: Throw AuraHandledException
@@ -697,4 +706,39 @@ public class Utils {
 			this.stackTraceString = exc.getStackTraceString();
 		}
 	}
+
+	//********************************************* END - Work with Exception ***************************************************//
+
+	//********************************************* START - Converting **********************************************************//
+
+	/*
+	 * @author: Dmytro Lambru
+	 * @date: 21.06.2019
+     * @description: converts from string to specified type
+     * @param: typeOfValue - type of value to convert to
+     * @param: value - value as string
+     * */
+    private Object convertFromStringToSpecifiedType(String typeOfValue, String value) {
+        Object convertedValue;
+
+        if (typeOfValue == 'String') {
+            convertedValue = value;
+        }
+        else if (typeOfValue == 'Integer') {
+            convertedValue = Integer.valueOf( value );
+        }
+        else if (typeOfValue == 'Decimal') {
+            convertedValue = Decimal.valueOf( value );
+        }
+        else if (typeOfValue == 'Boolean') {
+            convertedValue = Boolean.valueOf( value );
+        }
+        else if (typeOfValue == 'String[]') {
+            convertedValue = (String[]) JSON.deserialize(value, String[].class);
+        }
+
+        return convertedValue;
+    }
+
+	//********************************************* END - Converting ***************************************************//
 }
