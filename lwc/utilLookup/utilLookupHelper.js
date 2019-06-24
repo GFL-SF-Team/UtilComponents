@@ -18,8 +18,8 @@ export default new class UtilLookupHelper {
             .then((response) => {
 
                 if (response.success) {
-                    const data = response.data;
-                    console.error(data);
+                    const data = JSON.parse(response.data);
+                    console.log(data);
 
                 } else {
                     handleErrorInResponseFromApex(cmp, response);
@@ -38,12 +38,18 @@ export default new class UtilLookupHelper {
     }
 
     setListLengthClass(cmp) {
-        const listContainerClass = `slds-dropdown_length-with-icon-${cmp.config.listSize}`;
+        const listContainerClass = `slds-dropdown_length-with-icon-${cmp.config.searchConfigMap.numberOfRecords}`;
 
         addElementClass(cmp, '[data-id="list_container"]', listContainerClass);
     }
 
-    // setComponentStyle(cmp) {
-    //     cmp.classList.add(`my_width_${cmp.componentWidth}`);
-    // }
+    validateListSize(number) {
+
+        if (number !== 5 && number !== 7 && number !== 10) {
+            console.error(`The length of the list must be 5 or 7 or 10! The value is set to 10. Your value is ${number}`);
+            number = 10;
+        }
+
+        return number;
+    }
 }

@@ -1,6 +1,7 @@
 public with sharing class Util_D_SearchConfig {
 
     public String objectName;
+    public Integer numberOfRecords;
     public Boolean isFieldLabelHidden;
     public String[] fieldForSearchList;
     public String[] fieldForQueryList;

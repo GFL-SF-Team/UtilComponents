@@ -18,6 +18,12 @@ export default class UtilLookup extends LightningElement {
         if (!isObject(value)) return;
 
         this._config = { ...this.defaultConfig, ...this._config, ...value };
+        console.log('this._config', this._config);
+
+        this._config.listSize = helper.validateListSize(this._config.listSize);
+
+        // copy a number of records for the query limit to the search config
+        this._config.searchConfigMap.numberOfRecords = this._config.listSize;
     }
 
     // private tracked
@@ -30,7 +36,7 @@ export default class UtilLookup extends LightningElement {
         label: 'Lookup for', // label text
         isLabelHidden: false, // to hide label if needed
         placeholder: 'Lookup for ...', // placeholder for input field
-        listSize: 5, // max number of list items
+        listSize: 10, // max number of list items (5 or 7 or 10 only)
 
         icon: { // icon config
             name: 'standard:account', // SLDS icon
