@@ -17,12 +17,18 @@ export * from './validationUtils';
  * @param {string} className name of the class to add
  */
 export function addElementClass(cmp, identifier, className) {
+
+    if (!$Validation.isInheritedFromLightningElement(cmp)) {
+        console.error(`An invalid object was passed, the object must be inherited from the class "LightningElement"`);
+        return;
+    }
+
     const element = cmp.template.querySelector(identifier);
 
     if ($Validation.isObject(element)) {
         element.classList.add(className);
     } else {
-        throw Error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
+        console.error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
     }
 }
 
@@ -34,12 +40,18 @@ export function addElementClass(cmp, identifier, className) {
  * @param {string} className name of the class to remove
  */
 export function removeElementClass(cmp, identifier, className) {
+
+    if (!$Validation.isInheritedFromLightningElement(cmp)) {
+        console.error(`An invalid object was passed, the object must be inherited from the class "LightningElement"`);
+        return;
+    }
+
     const element = cmp.template.querySelector(identifier);
 
     if ($Validation.isObject(element)) {
         element.classList.remove(className);
     } else {
-        throw Error(`Could not find element with identifier: '${identifier}' and find result is 'undefined'`);
+        console.error(`Could not find element with identifier: '${identifier}' and find result is 'undefined'`);
     }
 }
 

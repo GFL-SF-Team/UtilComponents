@@ -3,13 +3,13 @@
  * @author: Dmytro Lambru
  * @description: Helper class for component
  */
-import { addElementClass, handleErrorInResponse, handleErrorInResponseFromApex } from 'c/utils';
+import { addElementClass, removeElementClass, handleErrorInResponse, handleErrorInResponseFromApex } from 'c/utils';
 import lookup from '@salesforce/apex/Util_LookupController.lookup';
 
 export default new class UtilLookupHelper {
 
     doLookup(cmp, stringToSearch) {
-        this.switchSpinner(this, true);
+        this.switchSpinner(cmp, true);
 
         lookup({
             stringToSearch,
@@ -19,6 +19,9 @@ export default new class UtilLookupHelper {
 
                 if (response.success) {
                     const data = JSON.parse(response.data);
+
+                    cmp.recordList = data;
+
                     console.log(data);
 
                 } else {
@@ -51,5 +54,42 @@ export default new class UtilLookupHelper {
         }
 
         return number;
+    }
+
+    showList(cmp) {
+        addElementClass(cmp, '[data-id="lookup_container"]', 'slds-is-open');
+    }
+
+    hideList(cmp) {
+        removeElementClass(cmp, '[data-id="lookup_container"]', 'slds-is-open');
+    }
+
+    respondToStateChange(cmp) {
+        const callback = () => {
+
+            if (!cmp.focusStateMap.isInputFocused && !cmp.focusStateMap.isListFocused) {
+                this.hideList(cmp);
+            }
+        }
+
+        // eslint-disable-next-line @lwc/lwc/no-async-operation
+        setTimeout(callback);
+    }
+
+    clearInputData(cmp) {
+        const inputElement = cmp.template.querySelector('[data-id="input"]');
+
+        inputElement.value = '';
+        cmp.recordList = [];
+        inputElement.focus();
+    }
+
+    hideOrShowClearBtn(cmp, isVisible) {
+
+        if (isVisible) {
+            removeElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
+        } else {
+            addElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
+        }
     }
 }

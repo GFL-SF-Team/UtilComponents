@@ -1,5 +1,7 @@
 // !!! - This file must contain validation functions that return a boolean value - TRUE or FALSE
 
+import { LightningElement } from 'lwc';
+
 /**
  * @author Dmytro Lambru
  * @description Is the value type an object?
@@ -38,4 +40,14 @@ export function isUndefined(value) {
  */
 export function isUndefinedOrNull(value) {
     return isUndefined(value) || isNull(value);
+}
+
+/**
+ * @author Dmytro Lambru
+ * @description Is the object inherited from the class "LightningElement"?
+ * @param {*} value object to check
+ * @return {Boolean} true or false
+ */
+export function isInheritedFromLightningElement(value) {
+    return value instanceof LightningElement;
 }

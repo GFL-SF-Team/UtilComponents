@@ -8,7 +8,7 @@ public with sharing class Util_D_RecordInfo {
 
         public String fieldLabel;
         public String fieldName;
-        public Object value;
+        public Object fieldValue;
         public Boolean isFieldLabelHidden;
     }
 }

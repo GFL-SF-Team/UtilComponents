@@ -35,7 +35,7 @@
                             <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
                         </span>
 
-                        <input type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
+                        <input data-id="input" type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
                             placeholder={config.placeholder}
                             onkeyup={handleInputChange}
                             onblur={handleInputBlur}
@@ -53,46 +53,50 @@
                                 </div>
                             </template>
 
-                            <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon">
+                            <button data-id="clear_input_button" class="slds-input__icon slds-input__icon_right slds-button slds-button_icon slds-hidden" onclick={handleClearInput}>
                                 <lightning-icon icon-name="utility:clear" alternative-text="Clear" size="xx-small"></lightning-icon>
                             </button>
                         </div>
                     </div>
 
                     <!-- LIST -->
-                    <div data-id="list_container" class="slds-dropdown slds-dropdown_fluid" role="listbox">
+                    <div data-id="list_container" class="slds-dropdown slds-dropdown_fluid my-list-container" tabindex="0" role="listbox"
+                        onfocus={handleListFocus}
+                        onblur={handleListBlur}
+                    >
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-
-                            <!-- <template iterator:it={contacts}>
-                                <li key={it.value.Id}>
-                                    <div if:true={it.first} class="list-first"></div>
-                                    {it.value.Name}, {it.value.Title}
-                                    <div if:true={it.last} class="list-last"></div>
-                                </li>
-                            </template> -->
-
-                            <li role="presentation" class="slds-listbox__item">
-                                <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                    <!-- ICON -->
-                                    <span class="slds-media__figure slds-listbox__option-icon">
-                                        <span class="slds-icon_container slds-icon-standard-account">
-                                            <lightning-icon icon-name={config.icon.name} alternative-text={config.icon.alternativeText} size={config.icon.size} ></lightning-icon>
-                                        </span>
-                                    </span>
-
-                                    <span class="slds-media__body">
-                                        <span class="slds-listbox__option-text slds-listbox__option-text_entity">
-                                            Burlington Textiles Corp of America
-                                        </span>
-                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">
-                                            Address: Burlington, NC
-                                        </span>
-                                        <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">
-                                            Field: Some other text
-                                        </span>
-                                    </span>
+                            <template if:false={recordList.length}>
+                                <div class="slds-text-align_center slds-text-heading_small slds-text-color_weak">
+                                    No result yet ...
                                 </div>
-                            </li>
+                            </template>
+
+                            <template for:each={recordList} for:item="record">
+                                <li key={record.recordId} data-record-id={record.recordId} class="slds-listbox__item" role="presentation" onclick={handleListItemClick}>
+                                    <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                        <!-- ICON -->
+                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                            <span class="slds-icon_container slds-icon-standard-account">
+                                                <lightning-icon icon-name={config.icon.name} alternative-text={config.icon.alternativeText} size={config.icon.size} ></lightning-icon>
+                                            </span>
+                                        </span>
+    
+                                        <span class="slds-media__body">
+                                            <template iterator:field={record.fieldToShowInfoList}>
+                                                <span if:true={field.first} key={field.value.fieldName} class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                                    <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
+                                                    {field.value.fieldValue}
+                                                </span>
+
+                                                <span if:false={field.first} key={field.value.fieldName} class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+                                                    <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
+                                                    {field.value.fieldValue}
+                                                </span>
+                                            </template>
+                                        </span>
+                                    </div>
+                                </li>
+                            </template>
                         </ul>
                     </div>
                 </div>

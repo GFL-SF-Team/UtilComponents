@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+.my-list-container {
+    outline: none;
+}
+
 /* :host(.width_50) {
     width: 50%;
 } */

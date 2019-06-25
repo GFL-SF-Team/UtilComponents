@@ -5,38 +5,42 @@
  */
 import { LightningElement, api, track } from 'lwc';
 import helper from './utilLookupHelper';
-import { addElementClass, removeElementClass, isObject } from 'c/utils';
+import { isObject } from 'c/utils';
 
 export default class UtilLookup extends LightningElement {
     // public
     @api
     get config() {
-        return this._config;
+        return this._configMap;
     }
+    set config(configMap) {
+        if (!isObject(configMap)) return;
 
-    set config(value) {
-        if (!isObject(value)) return;
+        this._configMap = { ...this.defaultConfigMap, ...this._configMap, ...configMap };
+        console.log('this._configMap', this._configMap);
 
-        this._config = { ...this.defaultConfig, ...this._config, ...value };
-        console.log('this._config', this._config);
-
-        this._config.listSize = helper.validateListSize(this._config.listSize);
+        this._configMap.listSize = helper.validateListSize(this._configMap.listSize);
 
         // copy a number of records for the query limit to the search config
-        this._config.searchConfigMap.numberOfRecords = this._config.listSize;
+        this._configMap.searchConfigMap.numberOfRecords = this._configMap.listSize;
     }
 
     // private tracked
     @track isLoading = false;
+    @track recordList = [];
 
     // private
-    _config = {}
+    _configMap = {};
+    focusStateMap = {
+        isInputFocused: false,
+        isListFocused: false
+    };
 
-    defaultConfig = {
+    defaultConfigMap = {
         label: 'Lookup for', // label text
         isLabelHidden: false, // to hide label if needed
         placeholder: 'Lookup for ...', // placeholder for input field
-        listSize: 10, // max number of list items (5 or 7 or 10 only)
+        listSize: 5, // max number of list items (5 or 7 or 10 only)
 
         icon: { // icon config
             name: 'standard:account', // SLDS icon
@@ -54,22 +58,10 @@ export default class UtilLookup extends LightningElement {
             //     { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
             // ],
             fieldToShowList: [ // fields to display in the result list
-                { fieldName: 'Name', isFieldLabelHidden: false },
+                { fieldName: 'Name', isFieldLabelHidden: true },
                 { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
                 { fieldName: 'Name', isFieldLabelHidden: false },
-            ],
-
-            recordList: [
-                {
-                    recordId: 'someId',
-                    record: {},
-                    fieldToShowList: [{
-                        fieldName: 'Name__c',
-                        fieldLabel: 'Name',
-                        value: 'Bla bla'
-                    }],
-                }
-            ],
+            ]
         }
     }
 
@@ -90,24 +82,53 @@ export default class UtilLookup extends LightningElement {
     disconnectedCallback() { console.error('RUN disconnectedCallback()'); }
     // END - lifecycle hooks
 
-    handleInputFocus() {
-        addElementClass(this, '[data-id="lookup_container"]', 'slds-is-open');
-    }
-
-    handleInputBlur() {
-        removeElementClass(this, '[data-id="lookup_container"]', 'slds-is-open');
-    }
-
     handleInputChange(event) {
-        let stringToSearch = event.target.value;
-        console.error('stringToSearch', stringToSearch);
+        const stringToSearch = event.target.value;
 
         if (!stringToSearch) {
-            //TODO: reset result list
+            this.recordList = [];
+            helper.hideOrShowClearBtn(this, false);
             return;
         }
 
+        helper.hideOrShowClearBtn(this, true);
         helper.doLookup(this, stringToSearch);
     }
 
+    handleClearInput() {
+        helper.hideOrShowClearBtn(this, false);
+        helper.clearInputData(this);
+    }
+
+    handleInputFocus() {
+        this.focusStateMap.isInputFocused = true;
+        // console.log('handleInputFocus()');
+        helper.showList(this);
+    }
+
+    handleInputBlur() {
+        this.focusStateMap.isInputFocused = false;
+        helper.respondToStateChange(this);
+        // console.log('handleInputBlur()');
+    }
+
+    handleListFocus() {
+        this.focusStateMap.isListFocused = true;
+        // console.log('handleListFocus()');
+
+    }
+
+    handleListBlur() {
+        this.focusStateMap.isListFocused = false;
+        helper.respondToStateChange(this);
+        // console.log('handleListBlur()');
+
+    }
+
+    handleListItemClick(event) {
+        console.log('handleListItemClick()');
+        console.log('li event', event);
+        console.log('li ID', event.currentTarget.dataset.recordId);
+        //TODO: dispatch event with record
+    }
 }

@@ -111,7 +111,7 @@ public inherited sharing class Util_LookupHelper {
 
 				fieldToShowInfo.fieldLabel = getFieldLabel(record, fieldToShow, objectDescribe);
 				fieldToShowInfo.fieldName = fieldToShow.fieldName;
-				fieldToShowInfo.value = record.get(fieldToShow.fieldName);
+				fieldToShowInfo.fieldValue = record.get(fieldToShow.fieldName);
 				fieldToShowInfo.isFieldLabelHidden = fieldToShow.isFieldLabelHidden;
 				
 				fieldToShowInfoList.add(fieldToShowInfo);
