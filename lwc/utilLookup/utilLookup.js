@@ -83,21 +83,21 @@ export default class UtilLookup extends LightningElement {
     // END - lifecycle hooks
 
     handleInputChange(event) {
-        const stringToSearch = event.target.value;
+        const stringToSearch = event.target.value.trim();
 
         if (!stringToSearch) {
             this.recordList = [];
-            helper.hideOrShowClearBtn(this, false);
+            helper.hideClearBtn(this);
             return;
         }
 
-        helper.hideOrShowClearBtn(this, true);
+        helper.showClearBtn(this);
         helper.doLookup(this, stringToSearch);
     }
 
     handleClearInput() {
-        helper.hideOrShowClearBtn(this, false);
-        helper.clearInputData(this);
+        helper.clearInputAndRecords(this);
+        helper.changeFocusOnInput(this);
     }
 
     handleInputFocus() {
@@ -129,6 +129,12 @@ export default class UtilLookup extends LightningElement {
         console.log('handleListItemClick()');
         console.log('li event', event);
         console.log('li ID', event.currentTarget.dataset.recordId);
-        //TODO: dispatch event with record
+
+        const recordId = event.currentTarget.dataset.recordId;
+
+        helper.fireEventWithSelectedRecord(this, recordId);
+
+        helper.clearInputAndRecords(this);
+        this.handleListBlur();
     }
 }

@@ -3,7 +3,7 @@
  * @author: Dmytro Lambru
  * @description: Helper class for component
  */
-import { addElementClass, removeElementClass, handleErrorInResponse, handleErrorInResponseFromApex } from 'c/utils';
+import { fireCustomEvent, addElementClass, removeElementClass, handleErrorInResponse, handleErrorInResponseFromApex } from 'c/utils';
 import lookup from '@salesforce/apex/Util_LookupController.lookup';
 
 export default new class UtilLookupHelper {
@@ -76,20 +76,31 @@ export default new class UtilLookupHelper {
         setTimeout(callback);
     }
 
-    clearInputData(cmp) {
+    clearInputAndRecords(cmp) {
         const inputElement = cmp.template.querySelector('[data-id="input"]');
-
         inputElement.value = '';
+
         cmp.recordList = [];
+
+        this.hideClearBtn(cmp);
+    }
+
+    changeFocusOnInput(cmp) {
+        const inputElement = cmp.template.querySelector('[data-id="input"]');
         inputElement.focus();
     }
 
-    hideOrShowClearBtn(cmp, isVisible) {
+    showClearBtn(cmp) {
+        removeElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
+    }
 
-        if (isVisible) {
-            removeElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
-        } else {
-            addElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
-        }
+    hideClearBtn(cmp) {
+        addElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
+    }
+
+    fireEventWithSelectedRecord(cmp, recordId) {
+        const selectedRecord = cmp.recordList.find(record => record.recordId === recordId);
+
+        fireCustomEvent(cmp, 'select', selectedRecord);
     }
 }

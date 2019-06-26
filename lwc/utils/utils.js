@@ -8,6 +8,29 @@ import * as $Validation from './validationUtils';
 
 // redirect all
 export * from './validationUtils';
+export * from './pubsub';
+
+/**
+ * @author Dmytro Lambru
+ * @description Dispatch 'CustomEvent'
+ * @param {object} cmp component(this) class object
+ * @param {string} eventName - name for the event
+ * @param {any} data - (optional) Data to transfer. Defaults to undefined
+ * @param {boolean} isBubblePhase - (optional) A Boolean value indicating whether the event bubbles up through the DOM or not. Defaults to false
+ * @param {boolean} isComposed - (optional) A Boolean value indicating whether the event can pass through the shadow boundary. Defaults to false
+ */
+export function fireCustomEvent(cmp, eventName, data = undefined, isBubblePhase = false, isComposed = false) {
+
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
+
+    const eventToFire = new CustomEvent(eventName, {
+        detail: data,
+        bubbles: isBubblePhase,
+        composed: isComposed
+    });
+
+    cmp.dispatchEvent(eventToFire);
+}
 
 /**
  * @author Dmytro Lambru
@@ -18,10 +41,7 @@ export * from './validationUtils';
  */
 export function addElementClass(cmp, identifier, className) {
 
-    if (!$Validation.isInheritedFromLightningElement(cmp)) {
-        console.error(`An invalid object was passed, the object must be inherited from the class "LightningElement"`);
-        return;
-    }
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
 
     const element = cmp.template.querySelector(identifier);
 
@@ -41,10 +61,7 @@ export function addElementClass(cmp, identifier, className) {
  */
 export function removeElementClass(cmp, identifier, className) {
 
-    if (!$Validation.isInheritedFromLightningElement(cmp)) {
-        console.error(`An invalid object was passed, the object must be inherited from the class "LightningElement"`);
-        return;
-    }
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
 
     const element = cmp.template.querySelector(identifier);
 
@@ -119,6 +136,7 @@ export function convertToArrayIfNotArray(value) {
  */
 export function handleErrorInResponse(cmp, error, isShowToast = true) {
 
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
     if (isShowToast) showCriticalErrorToast(cmp);
 
     const errorList = reduceErrors(error);
@@ -134,6 +152,7 @@ export function handleErrorInResponse(cmp, error, isShowToast = true) {
  */
 export function handleErrorInResponseFromApex(cmp, response, isShowToast = true) {
 
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
     if (isShowToast) showCriticalErrorToast(cmp, response.code);
 
     if (!!response && response.hasOwnProperty('code') && !!response.code) {
@@ -156,6 +175,9 @@ export function handleErrorInResponseFromApex(cmp, response, isShowToast = true)
  * @param {string} [mode='dismissable'] (dismissable/pester/sticky)
  */
 export function showToast(cmp, title, message, variant = 'success', mode = 'dismissable') {
+
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
+
     const newEvent = new ShowToastEvent({
         title,
         message,
@@ -173,6 +195,9 @@ export function showToast(cmp, title, message, variant = 'success', mode = 'dism
  * @param {string|number} code error code
  */
 export function showCriticalErrorToast(cmp, code) {
+
+    if (!$Validation.isInheritedFromLightningElement(cmp)) return;
+
     const title = 'System error!';
     let message = 'Please let us know about it';
     const variant = 'error';

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // !!! - This file must contain validation functions that return a boolean value - TRUE or FALSE
 
 import { LightningElement } from 'lwc';
@@ -49,5 +50,11 @@ export function isUndefinedOrNull(value) {
  * @return {Boolean} true or false
  */
 export function isInheritedFromLightningElement(value) {
-    return value instanceof LightningElement;
+    const result = value instanceof LightningElement;
+
+    if (!result) {
+        console.error(`An invalid object was passed, the object must be inherited from the class "LightningElement"`);
+    }
+
+    return result;
 }
