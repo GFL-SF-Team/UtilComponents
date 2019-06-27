@@ -9,98 +9,104 @@
 
         <div class="slds-form-element__control">
             <!-- SELECTED -->
-            <!-- <div class="slds-combobox_container slds-has-selection">
-                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-                    <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon">
-                        <lightning-icon icon-name="standard:account" alternative-text="Icon"></lightning-icon>
-                    </span>
-
-                    <input type="text" class="slds-input slds-combobox__input slds-combobox__input-value" autocomplete="off"
-                        readonly
-                        value="Salesforce.com, Inc."
-                    />
-
-                    <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right">
-                        <lightning-icon icon-name="utility:close" alternative-text="Remove" size="x-small"></lightning-icon>
-                    </button>
-                </div>
-            </div> -->
-
-            <!-- NOT SELECTED -->
-            <div class="slds-combobox_container">
-                <div data-id="lookup_container" class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
-                    <!-- INPUT -->
-                    <div style="position: relative;" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
-                        <span class="slds-icon_container slds-input__icon slds-input__icon_left">
-                            <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
-                        </span>
-
-                        <input data-id="input" type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
-                            placeholder={config.placeholder}
-                            onkeyup={handleInputChange}
-                            onblur={handleInputBlur}
-                            onfocus={handleInputFocus}
-                        />
-
-                        <div class="slds-input__icon-group slds-input__icon-group_right">
-                            <template if:true={isLoading}>
-                                <div class="slds-spinner_container">
-                                    <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
-                                        <span class="slds-assistive-text">Loading</span>
-                                        <div class="slds-spinner__dot-a"></div>
-                                        <div class="slds-spinner__dot-b"></div>
-                                    </div>
-                                </div>
-                            </template>
-
-                            <button data-id="clear_input_button" class="slds-input__icon slds-input__icon_right slds-button slds-button_icon slds-hidden" onclick={handleClearInput}>
-                                <lightning-icon icon-name="utility:clear" alternative-text="Clear" size="xx-small"></lightning-icon>
+            <template if:true={isRecordSelected}>
+                <div class="slds-combobox_container slds-has-selection">
+                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                            <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon">
+                                <lightning-icon icon-name={config.icon.name} size="x-small" alternative-text="Icon"></lightning-icon>
+                            </span>
+    
+                            <input data-id="input_with_record" readonly type="text" class="slds-input slds-combobox__input slds-combobox__input-value" autocomplete="off" />
+    
+                            <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={handleRemoveSelectedRecord}>
+                                <lightning-icon icon-name="utility:close" alternative-text="Remove" size="x-small"></lightning-icon>
                             </button>
                         </div>
                     </div>
+                </div>
+            </template>
 
-                    <!-- LIST -->
-                    <div data-id="list_container" class="slds-dropdown slds-dropdown_fluid my-list-container" tabindex="0" role="listbox"
-                        onfocus={handleListFocus}
-                        onblur={handleListBlur}
-                    >
-                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                            <template if:false={recordList.length}>
-                                <div class="slds-text-align_center slds-text-heading_small slds-text-color_weak">
-                                    No result yet ...
-                                </div>
-                            </template>
-
-                            <template for:each={recordList} for:item="record">
-                                <li key={record.recordId} data-record-id={record.recordId} class="slds-listbox__item" role="presentation" onclick={handleListItemClick}>
-                                    <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
-                                        <!-- ICON -->
-                                        <span class="slds-media__figure slds-listbox__option-icon">
-                                            <span class="slds-icon_container slds-icon-standard-account">
-                                                <lightning-icon icon-name={config.icon.name} alternative-text={config.icon.alternativeText} size={config.icon.size} ></lightning-icon>
-                                            </span>
-                                        </span>
+            <!-- NOT SELECTED -->
+            <template if:false={isRecordSelected}>
+                <div class="slds-combobox_container">
+                    <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                        <!-- INPUT -->
+                        <div style="position: relative;" class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                            <span class="slds-icon_container slds-input__icon slds-input__icon_left">
+                                <lightning-icon icon-name="utility:search" alternative-text="Search icon" size="x-small"></lightning-icon>
+                            </span>
     
-                                        <span class="slds-media__body">
-                                            <template iterator:field={record.fieldToShowInfoList}>
-                                                <span if:true={field.first} key={field.value.fieldName} class="slds-listbox__option-text slds-listbox__option-text_entity">
-                                                    <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
-                                                    {field.value.fieldValue}
-                                                </span>
-
-                                                <span if:false={field.first} key={field.value.fieldName} class="slds-listbox__option-meta slds-listbox__option-meta_entity">
-                                                    <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
-                                                    {field.value.fieldValue}
-                                                </span>
-                                            </template>
-                                        </span>
+                            <input data-id="input" type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-autocomplete="list" aria-controls="listbox-id-1" autocomplete="off" role="textbox"
+                                placeholder={config.placeholder}
+                                onkeyup={handleInputChange}
+                                onblur={handleInputBlur}
+                                onfocus={handleInputFocus}
+                            />
+    
+                            <div class="slds-input__icon-group slds-input__icon-group_right">
+                                <template if:true={isLoading}>
+                                    <div class="slds-spinner_container">
+                                        <div role="status" class="slds-spinner slds-spinner_brand slds-spinner_x-small slds-input__spinner">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
                                     </div>
-                                </li>
-                            </template>
-                        </ul>
+                                </template>
+    
+                                <button data-id="clear_input_button" class="slds-input__icon slds-input__icon_right slds-button slds-button_icon slds-hidden" onclick={handleClearInput}>
+                                    <lightning-icon icon-name="utility:clear" alternative-text="Clear" size="xx-small"></lightning-icon>
+                                </button>
+                            </div>
+                        </div>
+    
+                        <!-- LIST -->
+                        <template if:true={isListOpen}>
+                            <div class={listContainerClass} tabindex="0" role="listbox"
+                                onfocus={handleListFocus}
+                                onblur={handleListBlur}
+                            >
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <!-- Message in empty list -->
+                                    <template if:false={recordList.length}>
+                                        <div class="slds-text-align_center slds-text-heading_small slds-text-color_weak">
+                                            No result yet ...
+                                        </div>
+                                    </template>
+        
+                                    <template for:each={recordList} for:item="record">
+                                        <li key={record.recordId} data-record-id={record.recordId} class="slds-listbox__item" role="presentation" onclick={handleListItemClick}>
+                                            <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                <!-- ICON -->
+                                                <span class="slds-media__figure slds-listbox__option-icon">
+                                                    <span class="slds-icon_container slds-icon-standard-account">
+                                                        <lightning-icon icon-name={config.icon.name} alternative-text={config.icon.alternativeText} size={config.icon.size} ></lightning-icon>
+                                                    </span>
+                                                </span>
+            
+                                                <span class="slds-media__body">
+                                                    <template iterator:field={record.fieldToShowInfoList}>
+                                                        <span if:true={field.first} key={field.value.fieldName} class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                                            <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
+                                                            {field.value.fieldValue}
+                                                        </span>
+        
+                                                        <span if:false={field.first} key={field.value.fieldName} class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+                                                            <template if:false={field.value.isFieldLabelHidden}>{field.value.fieldLabel} : </template>
+                                                            {field.value.fieldValue}
+                                                        </span>
+                                                    </template>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
     </div>
 </template>

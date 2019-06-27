@@ -5,7 +5,7 @@
  */
 import { LightningElement, api, track } from 'lwc';
 import helper from './utilLookupHelper';
-import { isObject } from 'c/utils';
+import { isObject, jsonConverter } from 'c/utils';
 
 export default class UtilLookup extends LightningElement {
     // public
@@ -14,27 +14,39 @@ export default class UtilLookup extends LightningElement {
         return this._configMap;
     }
     set config(configMap) {
+
         if (!isObject(configMap)) return;
 
-        this._configMap = { ...this.defaultConfigMap, ...this._configMap, ...configMap };
-        console.log('this._configMap', this._configMap);
+        configMap = jsonConverter(configMap);
 
+        // grab all configs
+        this._configMap = { ...this.defaultConfigMap, ...this._configMap, ...configMap };
+        // set valid size
         this._configMap.listSize = helper.validateListSize(this._configMap.listSize);
 
-        // copy a number of records for the query limit to the search config
+        // copy a number of records for the query from size of list
         this._configMap.searchConfigMap.numberOfRecords = this._configMap.listSize;
+
+        console.log('this._configMap', this._configMap);
     }
 
     // private tracked
-    @track isLoading = false;
     @track recordList = [];
+    @track isLoading = false;
+    @track isRecordSelected = false;
+    @track isListOpen = false;
 
     // private
-    _configMap = {};
     focusStateMap = {
         isInputFocused: false,
         isListFocused: false
     };
+
+    _configMap = {};
+
+    //TODO:
+    // isShowSelectedRecord: true
+    // clearMethod()
 
     defaultConfigMap = {
         label: 'Lookup for', // label text
@@ -53,10 +65,10 @@ export default class UtilLookup extends LightningElement {
             fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'],
             fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
             fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
-            // fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees = 8 AND ...'
-            //     { fieldName: 'NumberOfEmployees', condition: '=', value: '8', typeOfValue: 'Integer' },
-            //     { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
-            // ],
+            fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees = 8 AND ...'
+                { fieldName: 'NumberOfEmployees', condition: '=', value: '8', typeOfValue: 'Integer' },
+                { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
+            ],
             fieldToShowList: [ // fields to display in the result list
                 { fieldName: 'Name', isFieldLabelHidden: true },
                 { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
@@ -65,21 +77,30 @@ export default class UtilLookup extends LightningElement {
         }
     }
 
+    get listContainerClass() {
+        let classString = 'slds-dropdown slds-dropdown_fluid my-list-container ';
+        classString += `slds-dropdown_length-with-icon-${this.config.searchConfigMap.numberOfRecords}`;
+
+        return classString;
+    }
+
     // START - lifecycle hooks
     constructor() {
         super();
         console.error('RUN constructor()');
     }
 
-    connectedCallback() { console.error('RUN connectedCallback()'); }
+    connectedCallback() {
+        console.error('RUN connectedCallback()');
+    }
 
     renderedCallback() {
         console.error('RUN renderedCallback()');
-
-        helper.setListLengthClass(this);
     }
 
-    disconnectedCallback() { console.error('RUN disconnectedCallback()'); }
+    disconnectedCallback() {
+        console.error('RUN disconnectedCallback()');
+    }
     // END - lifecycle hooks
 
     handleInputChange(event) {
@@ -102,39 +123,36 @@ export default class UtilLookup extends LightningElement {
 
     handleInputFocus() {
         this.focusStateMap.isInputFocused = true;
-        // console.log('handleInputFocus()');
-        helper.showList(this);
+        this.isListOpen = true;
     }
 
     handleInputBlur() {
         this.focusStateMap.isInputFocused = false;
         helper.respondToStateChange(this);
-        // console.log('handleInputBlur()');
     }
 
     handleListFocus() {
         this.focusStateMap.isListFocused = true;
-        // console.log('handleListFocus()');
-
     }
 
     handleListBlur() {
         this.focusStateMap.isListFocused = false;
         helper.respondToStateChange(this);
-        // console.log('handleListBlur()');
-
     }
 
     handleListItemClick(event) {
-        console.log('handleListItemClick()');
-        console.log('li event', event);
-        console.log('li ID', event.currentTarget.dataset.recordId);
-
         const recordId = event.currentTarget.dataset.recordId;
+        const selectedRecord = this.recordList.find(record => record.recordId === recordId);
 
-        helper.fireEventWithSelectedRecord(this, recordId);
-
+        helper.fireEventWithSelectedRecord(this, selectedRecord);
         helper.clearInputAndRecords(this);
-        this.handleListBlur();
+
+        this.isRecordSelected = true;
+
+        helper.setValueForInputWithSelectedRecord(this, selectedRecord);
+    }
+
+    handleRemoveSelectedRecord() {
+        this.isRecordSelected = false;
     }
 }

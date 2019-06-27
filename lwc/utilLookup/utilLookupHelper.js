@@ -40,35 +40,21 @@ export default new class UtilLookupHelper {
         cmp.isLoading = isLoading;
     }
 
-    setListLengthClass(cmp) {
-        const listContainerClass = `slds-dropdown_length-with-icon-${cmp.config.searchConfigMap.numberOfRecords}`;
-
-        addElementClass(cmp, '[data-id="list_container"]', listContainerClass);
-    }
-
     validateListSize(number) {
 
         if (number !== 5 && number !== 7 && number !== 10) {
             console.error(`The length of the list must be 5 or 7 or 10! The value is set to 10. Your value is ${number}`);
-            number = 10;
+            number = 5;
         }
 
         return number;
-    }
-
-    showList(cmp) {
-        addElementClass(cmp, '[data-id="lookup_container"]', 'slds-is-open');
-    }
-
-    hideList(cmp) {
-        removeElementClass(cmp, '[data-id="lookup_container"]', 'slds-is-open');
     }
 
     respondToStateChange(cmp) {
         const callback = () => {
 
             if (!cmp.focusStateMap.isInputFocused && !cmp.focusStateMap.isListFocused) {
-                this.hideList(cmp);
+                cmp.isListOpen = false;
             }
         }
 
@@ -98,9 +84,13 @@ export default new class UtilLookupHelper {
         addElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
     }
 
-    fireEventWithSelectedRecord(cmp, recordId) {
-        const selectedRecord = cmp.recordList.find(record => record.recordId === recordId);
+    fireEventWithSelectedRecord(cmp, selectedRecord) {
+        fireCustomEvent(cmp, 'select', { record: selectedRecord.record });
+    }
 
-        fireCustomEvent(cmp, 'select', selectedRecord);
+    setValueForInputWithSelectedRecord(cmp, selectedRecord) {
+        const inputElement = cmp.template.querySelector('[data-id="input_with_record"]');
+
+        //TODO: set new value for input
     }
 }

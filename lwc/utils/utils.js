@@ -4,11 +4,23 @@
 // !!! - Add a full comment block
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { DEBUG_MODE } from './constants';
 import * as $Validation from './validationUtils';
 
 // redirect all
 export * from './validationUtils';
 export * from './pubsub';
+
+export function showConsoleError(arg1, arg2) {
+
+    if (!DEBUG_MODE) return;
+
+    if (arg2) {
+        console.error(arg1, arg2)
+    } else {
+        console.error(arg1)
+    }
+}
 
 /**
  * @author Dmytro Lambru
@@ -48,7 +60,7 @@ export function addElementClass(cmp, identifier, className) {
     if ($Validation.isObject(element)) {
         element.classList.add(className);
     } else {
-        console.error(`Could not find element with identifier:'${identifier}' and find result is 'undefined'`);
+        showConsoleError(`Could not find element with identifier:'${identifier}' and find result is '${'' + element}'`);
     }
 }
 
@@ -68,7 +80,7 @@ export function removeElementClass(cmp, identifier, className) {
     if ($Validation.isObject(element)) {
         element.classList.remove(className);
     } else {
-        console.error(`Could not find element with identifier: '${identifier}' and find result is 'undefined'`);
+        showConsoleError(`Could not find element with identifier: '${identifier}' and find result is '${'' + element}'`);
     }
 }
 
@@ -137,10 +149,14 @@ export function convertToArrayIfNotArray(value) {
 export function handleErrorInResponse(cmp, error, isShowToast = true) {
 
     if (!$Validation.isInheritedFromLightningElement(cmp)) return;
-    if (isShowToast) showCriticalErrorToast(cmp);
+
+    if (isShowToast) {
+        showCriticalErrorToast(cmp);
+    }
 
     const errorList = reduceErrors(error);
-    console.error(errorList);
+
+    showConsoleError('ERRORS:', errorList);
 }
 
 /**
@@ -156,11 +172,11 @@ export function handleErrorInResponseFromApex(cmp, response, isShowToast = true)
     if (isShowToast) showCriticalErrorToast(cmp, response.code);
 
     if (!!response && response.hasOwnProperty('code') && !!response.code) {
-        console.error('APEX ERROR CODE:', response.code);
+        showConsoleError('APEX ERROR CODE:', response.code);
     }
 
     if (!!response && response.hasOwnProperty('message') && !!response.message) {
-        console.error('APEX ERROR MSG:', response.message);
+        showConsoleError('APEX ERROR MSG:', response.message);
     }
 }
 
@@ -208,4 +224,14 @@ export function showCriticalErrorToast(cmp, code) {
     }
 
     showToast(cmp, title, message, variant, mode);
+}
+
+/**
+ * @author Lambru Dmytro
+ * @description clone and break all references to an object and its nested objects, although uncover 'Proxy' object.
+ * @param {any} value - value to convert
+ * @returns {any} - converted value
+ */
+export function jsonConverter(value) {
+    return JSON.parse(JSON.stringify(value));
 }
