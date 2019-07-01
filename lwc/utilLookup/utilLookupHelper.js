@@ -54,7 +54,7 @@ export default new class UtilLookupHelper {
         const callback = () => {
 
             if (!cmp.focusStateMap.isInputFocused && !cmp.focusStateMap.isListFocused) {
-                cmp.isListOpen = false;
+                this.hideList(cmp);
             }
         }
 
@@ -62,12 +62,19 @@ export default new class UtilLookupHelper {
         setTimeout(callback);
     }
 
+    openList(cmp) {
+        cmp.isListOpen = true;
+    }
+
+    hideList(cmp) {
+        cmp.isListOpen = false;
+    }
+
     clearInputAndRecords(cmp) {
         const inputElement = cmp.template.querySelector('[data-id="input"]');
         inputElement.value = '';
 
         cmp.recordList = [];
-
         this.hideClearBtn(cmp);
     }
 
@@ -84,13 +91,26 @@ export default new class UtilLookupHelper {
         addElementClass(cmp, '[data-id="clear_input_button"]', 'slds-hidden');
     }
 
-    fireEventWithSelectedRecord(cmp, selectedRecord) {
-        fireCustomEvent(cmp, 'select', { record: selectedRecord.record });
+    showInputWithSelectedRecord(cmp) {
+
+        if (cmp.config.isHiddenInputWithSelectedRecord) return;
+
+        cmp.isShowInputWithSelectedRecord = true;
     }
 
-    setValueForInputWithSelectedRecord(cmp, selectedRecord) {
-        const inputElement = cmp.template.querySelector('[data-id="input_with_record"]');
+    hideInputWithSelectedRecord(cmp) {
+        cmp.isShowInputWithSelectedRecord = false;
+    }
 
-        //TODO: set new value for input
+    setSelectedRecordInfo(cmp, recordId) {
+        cmp.selectedRecordInfo = cmp.recordList.find(recordInfo => recordInfo.recordId === recordId);
+    }
+
+    fireEventWithSelectedRecord(cmp) {
+        fireCustomEvent(cmp, 'select', { record: cmp.selectedRecordInfo.record });
+    }
+
+    fireEventSelectedRecordRemoved(cmp) {
+        fireCustomEvent(cmp, 'remove');
     }
 }

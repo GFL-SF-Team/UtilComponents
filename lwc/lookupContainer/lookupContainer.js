@@ -7,7 +7,7 @@ export default class LookupContainer extends LightningElement {
         label: 'Label for Lookup :)', // label text
         isLabelHidden: false, // to hide label if needed
         placeholder: 'Lookup for Account', // placeholder for input field
-        listSize: 5, // max number of list items (5 or 7 or 10 only)
+        listSize: 7, // max number of list items (5 or 7 or 10 only)
 
         icon: { // icon config
             name: 'standard:account', // SLDS icon
@@ -29,6 +29,10 @@ export default class LookupContainer extends LightningElement {
     }
 
     handleSelectedRecord(event) {
-        console.log(JSON.parse(JSON.stringify(event.detail)));
+        console.log('handleSelectedRecord()', JSON.parse(JSON.stringify(event.detail)));
+    }
+
+    handleSelectedRecordRemoved() {
+        console.log('handleSelectedRecordRemoved()');
     }
 }

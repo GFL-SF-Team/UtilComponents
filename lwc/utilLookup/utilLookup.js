@@ -8,9 +8,9 @@ import helper from './utilLookupHelper';
 import { isObject, jsonConverter } from 'c/utils';
 
 export default class UtilLookup extends LightningElement {
-    // public
-    @api
-    get config() {
+
+    // public property
+    @api get config() {
         return this._configMap;
     }
     set config(configMap) {
@@ -30,29 +30,35 @@ export default class UtilLookup extends LightningElement {
         console.log('this._configMap', this._configMap);
     }
 
+    // public method
+    @api removeSelectedRecord() {
+        console.log('adwda');
+
+        helper.hideInputWithSelectedRecord(this);
+    }
+
     // private tracked
     @track recordList = [];
     @track isLoading = false;
-    @track isRecordSelected = false;
+    @track isShowInputWithSelectedRecord = false;
     @track isListOpen = false;
 
     // private
-    focusStateMap = {
+    _configMap = {};
+
+    focusStateMap = { // to track focused elements of component
         isInputFocused: false,
         isListFocused: false
     };
 
-    _configMap = {};
-
-    //TODO:
-    // isShowSelectedRecord: true
-    // clearMethod()
+    selectedRecordInfo = {}; // information about selected record
 
     defaultConfigMap = {
         label: 'Lookup for', // label text
-        isLabelHidden: false, // to hide label if needed
+        isLabelHidden: false, // Is the input field label hidden or not?
         placeholder: 'Lookup for ...', // placeholder for input field
         listSize: 5, // max number of list items (5 or 7 or 10 only)
+        isHiddenInputWithSelectedRecord: false, // Is the hidden input field with the selected record?
 
         icon: { // icon config
             name: 'standard:account', // SLDS icon
@@ -62,7 +68,7 @@ export default class UtilLookup extends LightningElement {
 
         searchConfigMap: { // config for search
             objectName: 'Account',
-            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'],
+            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'], // fields to query
             fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
             fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
             fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees = 8 AND ...'
@@ -70,18 +76,11 @@ export default class UtilLookup extends LightningElement {
                 { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
             ],
             fieldToShowList: [ // fields to display in the result list
-                { fieldName: 'Name', isFieldLabelHidden: true },
+                { fieldName: 'Name', isFieldLabelHidden: true }, // without label
                 { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
-                { fieldName: 'Name', isFieldLabelHidden: false },
+                { fieldName: 'Name', isFieldLabelHidden: false }, // with label from org
             ]
         }
-    }
-
-    get listContainerClass() {
-        let classString = 'slds-dropdown slds-dropdown_fluid my-list-container ';
-        classString += `slds-dropdown_length-with-icon-${this.config.searchConfigMap.numberOfRecords}`;
-
-        return classString;
     }
 
     // START - lifecycle hooks
@@ -103,12 +102,24 @@ export default class UtilLookup extends LightningElement {
     }
     // END - lifecycle hooks
 
+    get listContainerClass() {
+        let classString = 'slds-dropdown slds-dropdown_fluid my-list-container ';
+        classString += `slds-dropdown_length-with-icon-${this.config.listSize}`;
+
+        return classString;
+    }
+
+    get valueOfFirstFieldToShowOfSelectedRecord() {
+        const [firstFieldToShow] = this.selectedRecordInfo.fieldToShowInfoList;
+
+        return firstFieldToShow.fieldValue;
+    }
+
     handleInputChange(event) {
         const stringToSearch = event.target.value.trim();
 
         if (!stringToSearch) {
-            this.recordList = [];
-            helper.hideClearBtn(this);
+            helper.clearInputAndRecords(this);
             return;
         }
 
@@ -123,7 +134,7 @@ export default class UtilLookup extends LightningElement {
 
     handleInputFocus() {
         this.focusStateMap.isInputFocused = true;
-        this.isListOpen = true;
+        helper.openList(this);
     }
 
     handleInputBlur() {
@@ -142,17 +153,17 @@ export default class UtilLookup extends LightningElement {
 
     handleListItemClick(event) {
         const recordId = event.currentTarget.dataset.recordId;
-        const selectedRecord = this.recordList.find(record => record.recordId === recordId);
 
-        helper.fireEventWithSelectedRecord(this, selectedRecord);
+        helper.setSelectedRecordInfo(this, recordId);
         helper.clearInputAndRecords(this);
+        helper.showInputWithSelectedRecord(this);
+        helper.fireEventWithSelectedRecord(this);
 
-        this.isRecordSelected = true;
-
-        helper.setValueForInputWithSelectedRecord(this, selectedRecord);
+        this.handleListBlur();
     }
 
     handleRemoveSelectedRecord() {
-        this.isRecordSelected = false;
+        helper.fireEventSelectedRecordRemoved(this);
+        helper.hideInputWithSelectedRecord(this);
     }
 }

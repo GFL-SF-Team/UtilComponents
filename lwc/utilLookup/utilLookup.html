@@ -9,15 +9,15 @@
 
         <div class="slds-form-element__control">
             <!-- SELECTED -->
-            <template if:true={isRecordSelected}>
+            <template if:true={isShowInputWithSelectedRecord}>
                 <div class="slds-combobox_container slds-has-selection">
                     <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
                         <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
                             <span class="slds-icon_container slds-icon-standard-account slds-combobox__input-entity-icon">
-                                <lightning-icon icon-name={config.icon.name} size="x-small" alternative-text="Icon"></lightning-icon>
+                                <lightning-icon icon-name={config.icon.name} size="x-small" alternative-text="icon"></lightning-icon>
                             </span>
     
-                            <input data-id="input_with_record" readonly type="text" class="slds-input slds-combobox__input slds-combobox__input-value" autocomplete="off" />
+                            <input value={valueOfFirstFieldToShowOfSelectedRecord} class="slds-input slds-combobox__input slds-combobox__input-value" type="text" readonly autocomplete="off" />
     
                             <button class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" onclick={handleRemoveSelectedRecord}>
                                 <lightning-icon icon-name="utility:close" alternative-text="Remove" size="x-small"></lightning-icon>
@@ -28,7 +28,7 @@
             </template>
 
             <!-- NOT SELECTED -->
-            <template if:false={isRecordSelected}>
+            <template if:false={isShowInputWithSelectedRecord}>
                 <div class="slds-combobox_container">
                     <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="false" aria-haspopup="listbox" role="combobox">
                         <!-- INPUT -->
