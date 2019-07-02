@@ -1,4 +1,10 @@
-public with sharing class Util_D_SearchConfig {
+/* @name: Util_D_SearchConfig
+ * @test: Util_LookupTest
+ * @author: Dmytro Lambru
+ * @date: 22.05.19
+ * @description: Data class for 'Util_LookupController'
+ */
+public class Util_D_SearchConfig {
 
     public String objectName;
     public Integer numberOfRecords;

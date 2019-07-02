@@ -1,14 +1,20 @@
 /* @name: Util_LookupController
- * @test: Util_LookupControllerTest
+ * @test: Util_LookupTest
  * @author: Dmytro Lambru
  * @date: 22.05.19
  * @description: Controller for 'utilLookup' LWC
  */
 public with sharing class Util_LookupController {
+	
     private static LightningResult response = new LightningResult();
 
-	@AuraEnabled
-	// @AuraEnabled(cacheable=true)
+	/**
+	 * @description             search for records by config
+	 * @param  stringToSearch   string with value for search
+	 * @param  searchConfigJson json string with search config
+	 * @return                  response with found records
+	 */
+	@AuraEnabled(cacheable=true)
 	public static LightningResult lookup(String stringToSearch, String searchConfigJson) {
 
 		try {

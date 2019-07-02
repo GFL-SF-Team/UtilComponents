@@ -1,4 +1,10 @@
-public with sharing class Util_D_RecordInfo {
+/* @name: Util_D_RecordInfo
+ * @test: Util_LookupTest
+ * @author: Dmytro Lambru
+ * @date: 22.05.19
+ * @description: Data class for 'Util_LookupController'
+ */
+public class Util_D_RecordInfo {
     
     public Id recordId;
     public SObject record;

@@ -1,15 +1,10 @@
-/* eslint-disable no-console */
-/**
- * @author: Dmytro Lambru
- * @date: 05.2019
- */
 import { LightningElement, api, track } from 'lwc';
 import helper from './utilLookupHelper';
 import { isObject, jsonConverter } from 'c/utils';
 
 export default class UtilLookup extends LightningElement {
 
-    // public property
+    // public properties
     @api get config() {
         return this._configMap;
     }
@@ -26,14 +21,10 @@ export default class UtilLookup extends LightningElement {
 
         // copy a number of records for the query from size of list
         this._configMap.searchConfigMap.numberOfRecords = this._configMap.listSize;
-
-        console.log('this._configMap', this._configMap);
     }
 
-    // public method
+    // public methods
     @api removeSelectedRecord() {
-        console.log('adwda');
-
         helper.hideInputWithSelectedRecord(this);
     }
 
@@ -44,14 +35,13 @@ export default class UtilLookup extends LightningElement {
     @track isListOpen = false;
 
     // private
-    _configMap = {};
+    _configMap = {}; // config cache (use config() getter and setter)
+    selectedRecordInfo = {}; // information about selected record
 
     focusStateMap = { // to track focused elements of component
         isInputFocused: false,
         isListFocused: false
     };
-
-    selectedRecordInfo = {}; // information about selected record
 
     defaultConfigMap = {
         label: 'Lookup for', // label text
@@ -83,25 +73,13 @@ export default class UtilLookup extends LightningElement {
         }
     }
 
-    // START - lifecycle hooks
-    constructor() {
-        super();
-        console.error('RUN constructor()');
-    }
+    // private methods for markup computed value
 
-    connectedCallback() {
-        console.error('RUN connectedCallback()');
-    }
-
-    renderedCallback() {
-        console.error('RUN renderedCallback()');
-    }
-
-    disconnectedCallback() {
-        console.error('RUN disconnectedCallback()');
-    }
-    // END - lifecycle hooks
-
+    /**
+     * @description set generated classes for the main container of the list with a search result.
+     * @author Dmytro Lambru
+     * @readonly
+     */
     get listContainerClass() {
         let classString = 'slds-dropdown slds-dropdown_fluid my-list-container ';
         classString += `slds-dropdown_length-with-icon-${this.config.listSize}`;
@@ -109,12 +87,24 @@ export default class UtilLookup extends LightningElement {
         return classString;
     }
 
+    /**
+     * @description show the value of the first field to display from the selected record in the input with selected record.
+     * @author Dmytro Lambru
+     * @readonly
+     */
     get valueOfFirstFieldToShowOfSelectedRecord() {
         const [firstFieldToShow] = this.selectedRecordInfo.fieldToShowInfoList;
 
         return firstFieldToShow.fieldValue;
     }
 
+    // controller functions
+
+    /**
+     * @description on change of input value
+     * @author Dmytro Lambru
+     * @param {object} event
+     */
     handleInputChange(event) {
         const stringToSearch = event.target.value.trim();
 
@@ -127,30 +117,58 @@ export default class UtilLookup extends LightningElement {
         helper.doLookup(this, stringToSearch);
     }
 
+    /**
+     * @description on 'clear' button click in the input field
+     * @author Dmytro Lambru
+     */
     handleClearInput() {
         helper.clearInputAndRecords(this);
         helper.changeFocusOnInput(this);
     }
 
+    /**
+     * @description focus action on input field element
+     * @author Dmytro Lambru
+     */
     handleInputFocus() {
         this.focusStateMap.isInputFocused = true;
+
         helper.openList(this);
     }
 
+    /**
+     * @description defocus action on input field element
+     * @author Dmytro Lambru
+     */
     handleInputBlur() {
         this.focusStateMap.isInputFocused = false;
+
         helper.respondToStateChange(this);
     }
 
+    /**
+     * @description focus action on list with search result
+     * @author Dmytro Lambru
+     */
     handleListFocus() {
         this.focusStateMap.isListFocused = true;
     }
 
+    /**
+     * @description defocus action on list with search result
+     * @author Dmytro Lambru
+     */
     handleListBlur() {
         this.focusStateMap.isListFocused = false;
+
         helper.respondToStateChange(this);
     }
 
+    /**
+     * @description click action on list item element
+     * @author Dmytro Lambru
+     * @param {object} event
+     */
     handleListItemClick(event) {
         const recordId = event.currentTarget.dataset.recordId;
 
@@ -162,6 +180,10 @@ export default class UtilLookup extends LightningElement {
         this.handleListBlur();
     }
 
+    /**
+     * @description 'remove' button click action on input field with selected record
+     * @author Dmytro Lambru
+     */
     handleRemoveSelectedRecord() {
         helper.fireEventSelectedRecordRemoved(this);
         helper.hideInputWithSelectedRecord(this);

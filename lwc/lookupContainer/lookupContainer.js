@@ -28,6 +28,25 @@ export default class LookupContainer extends LightningElement {
         }
     }
 
+    // START - lifecycle hooks
+    // constructor() {
+    //     super();
+    //     console.error('RUN constructor()');
+    // }
+
+    // connectedCallback() {
+    //     console.error('RUN connectedCallback()');
+    // }
+
+    // renderedCallback() {
+    //     console.error('RUN renderedCallback()');
+    // }
+
+    // disconnectedCallback() {
+    //     console.error('RUN disconnectedCallback()');
+    // }
+    // END - lifecycle hooks
+
     handleSelectedRecord(event) {
         console.log('handleSelectedRecord()', JSON.parse(JSON.stringify(event.detail)));
     }
