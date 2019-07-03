@@ -17,13 +17,13 @@ export default class LookupContainer extends LightningElement {
 
         searchConfigMap: { // config for search
             objectName: 'Account',
-            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'],
+            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site', 'SomeField__c'],
             fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
             fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
             fieldToShowList: [ // fields to display in the result list
                 { fieldName: 'Name', isFieldLabelHidden: true },
-                { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
-                { fieldName: 'Name', isFieldLabelHidden: false },
+                { fieldName: 'Phone', fieldLabel: 'Phone number', isFieldLabelHidden: false }, // with custom label
+                { fieldName: 'SomeField__c', isFieldLabelHidden: false },
             ]
         }
     }

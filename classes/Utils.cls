@@ -206,6 +206,13 @@ public class Utils {
 
 	//********************************************* Work with SObject (fields) ***************************************************//
 
+	/**
+     * @author                
+	 * @description           get field label from object by API name
+	 * @param  sObjectAPI     object API name
+	 * @param  fieldAPI       field API name
+	 * @return                label
+	 */
 	public static String getFieldLabelFormSObject(String sObjectAPI, String fieldAPI){
 
 		Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
@@ -215,59 +222,84 @@ public class Utils {
 		return	fieldMap.get(fieldAPI).getDescribe().getLabel();
 	}
 
+	/**
+     * @author                Dmytro Lambru
+	 * @description           get field label from schema object description
+	 * @param  objectDescribe schema object describe
+	 * @param  fieldName      field API name
+	 * @return                label
+	 */
 	public static String getFieldLabelFormSObject(Schema.DescribeSObjectResult objectDescribe, String fieldName) {
-		/* Get all Fields of the Object */
+		// Get all Fields of the Object
 		Map<String, Schema.SObjectField> fieldsMap = objectDescribe.fields.getMap();
-		/* Get describe of the field by name */
+		// Get describe of the field by name
 		Schema.DescribeFieldResult fieldResult = fieldsMap.get(fieldName).getDescribe();
 
 		return fieldResult.getLabel();
 	}
 
-
 	/*
-	 * @description: Verification of rights for the current user
-	 * @parameter:
-	 * 	objectName [String] - the name of the object to check
+     * @author            Dmytro Lambru
+	 * @description       Check user access to the object
+	 * @param objectName  object API name
 	 */
 	public static Boolean schemaCheckObjectIsDeletable(String objectName) {
-		/*
-		 * Get describe of the Object
-		 */
+		// Get describe of the Object
 		Schema.DescribeSObjectResult objectDesc = Schema.describeSObjects(new String[]{objectName})[0];
 
 		return objectDesc.isDeletable();
 	}
 
 	/*
-	 * @description: Verification of rights for the current user
-	 * @parameter:
-	 * 	objectName [String] - the name of the object to check
+     * @author            Dmytro Lambru
+	 * @description       Check user access to the object
+	 * @param objectName  object API name
 	 */
 	public static Boolean schemaCheckObjectIsUpdateable(String objectName) {
-		/*
-		 * Get describe of the Object
-		 */
+		// Get describe of the Object
 		Schema.DescribeSObjectResult objectDesc = Schema.describeSObjects(new String[]{objectName})[0];
 
 		return objectDesc.isUpdateable();
 	}
 
 	/*
-	 * @description: Verification of rights for the current user
-	 * @parameter:
-	 * 	objectName [String] - the name of the object to check
+     * @author            Dmytro Lambru
+	 * @description       Check user access to the object
+	 * @param objectName  object API name
 	 */
 	public static Boolean schemaCheckObjectIsCreateable(String objectName) {
-		/*
-		 * Get describe of the Object
-		 */
+		// Get describe of the Object
 		Schema.DescribeSObjectResult objectDesc = Schema.describeSObjects(new String[]{objectName})[0];
 
 		return objectDesc.isCreateable();
 	}
 
+	/*
+     * @author            Dmytro Lambru
+	 * @description       Check user access to the object
+	 * @param objectName  object API name
+	 */
+	public static Boolean schemaCheckObjectIsAccessible(String objectName) {
+		// Get describe of the Object
+		Schema.DescribeSObjectResult objectDesc = Schema.describeSObjects(new String[]{objectName})[0];
 
+		return objectDesc.isAccessible();
+	}
+
+	/*
+     * @author            Dmytro Lambru
+	 * @description       Check user access to the field on the object
+	 * @param objectDescribe  schema object describe
+	 * @param objectName  object API name
+	 */
+	public static Boolean schemaCheckObjectFieldIsAccessible(Schema.DescribeSObjectResult objectDescribe, String fieldName) {
+        // Get all Fields of the Object
+		Map<String, Schema.SObjectField> fieldsMap = objectDescribe.fields.getMap();
+		// Get describe of the field by name
+		Schema.DescribeFieldResult fieldResult = fieldsMap.get(fieldName).getDescribe();
+
+		return fieldResult.isAccessible();
+	}
 
 	//********************************************* Work with Picklist ***************************************************//
 

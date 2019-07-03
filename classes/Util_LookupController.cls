@@ -14,15 +14,15 @@ public with sharing class Util_LookupController {
 	 * @param  searchConfigJson json string with search config
 	 * @return                  response with found records
 	 */
-	@AuraEnabled(cacheable=true)
+	@AuraEnabled
 	public static LightningResult lookup(String stringToSearch, String searchConfigJson) {
 
 		try {
 			Util_D_SearchConfig searchConfig = Util_D_SearchConfig.parse(searchConfigJson);
 
-			// TODO: Access check
-			if (false) {
-				return response.setError(401);
+			if (!Utils.schemaCheckObjectIsAccessible(searchConfig.objectName)) {
+				// return empty list
+				return response.setResult('[]');
 			}
 
 			Util_D_RecordInfo[] recordInfoList = Util_LookupHelper.searchRecords(stringToSearch, searchConfig);

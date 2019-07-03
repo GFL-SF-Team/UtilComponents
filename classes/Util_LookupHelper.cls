@@ -4,8 +4,10 @@
  * @date: 22.05.19
  * @description: Helper for 'Util_LookupController'
  */
-public inherited sharing class Util_LookupHelper {
+public with sharing class Util_LookupHelper {
     
+    private static Schema.DescribeSObjectResult objectDescribe {get;set;}
+
 	/**
 	 * @description             search for records by config
 	 * @param  stringToSearch   string with value for search
@@ -13,9 +15,9 @@ public inherited sharing class Util_LookupHelper {
 	 * @return                  list with wrapped records
 	 */
     public static Util_D_RecordInfo[] searchRecords(String stringToSearch, Util_D_SearchConfig searchConfig) {
-        String queryString = generateQueryString(stringToSearch, searchConfig);
+		Util_LookupHelper.objectDescribe = Schema.describeSObjects(new String[]{searchConfig.objectName})[0];
 
-        System.debug(queryString);
+        String queryString = generateQueryString(stringToSearch, searchConfig);
         
         SObject[] resultRecordList = Database.query(queryString);
         
@@ -34,7 +36,7 @@ public inherited sharing class Util_LookupHelper {
 		String queryString = 'SELECT ';
 
 		// add fields
-		queryString += String.join(searchConfig.fieldForQueryList, ',') + ' ';
+		queryString += generateFields(searchConfig.fieldForQueryList) + ' ';
 
 		// add target object
 		queryString += 'FROM ' + searchConfig.objectName + ' ';
@@ -51,6 +53,28 @@ public inherited sharing class Util_LookupHelper {
         queryString += 'LIMIT ' + searchConfig.numberOfRecords;
 
 		return queryString;
+	}
+
+	/**
+	 * @description               generation of string with fields for query.
+	 *                            e.g. 'SomeField1__c, SomeField2__c, SomeField3__c'
+     *
+	 * @param  fieldForQueryList  list with API names of fields
+	 * @return                    generated string
+	 */
+	public static String generateFields(String[] fieldForQueryList) {
+		
+		for (Integer index = 0, length = fieldForQueryList.size(); index < length; index++) {
+			
+            // remove field from list, if user doesn't has access to the field
+			if (!Utils.schemaCheckObjectFieldIsAccessible(Util_LookupHelper.objectDescribe, fieldForQueryList[index])) {
+				fieldForQueryList.remove(index);
+			}
+		}
+
+		fieldForQueryList.add('Id');
+
+		return String.join(fieldForQueryList, ',');
 	}
 
 	/**
@@ -129,7 +153,6 @@ public inherited sharing class Util_LookupHelper {
      * @return                  list with wrapped records
      */
 	public static Util_D_RecordInfo[] processResultRecords(SObject[] resultRecordList, Util_D_SearchConfig searchConfig) {
-		Schema.DescribeSObjectResult objectDescribe = Schema.describeSObjects(new String[]{searchConfig.objectName})[0];
 		Util_D_RecordInfo[] recordInfoList = new Util_D_RecordInfo[]{};
 
 		for (SObject record : resultRecordList) {
@@ -137,7 +160,7 @@ public inherited sharing class Util_LookupHelper {
 
 			recordInfo.recordId = record.Id;
 			recordInfo.record = record;
-			recordInfo.fieldToShowInfoList = generateFieldsToShow(record, searchConfig, objectDescribe);
+			recordInfo.fieldToShowInfoList = generateFieldsToShow(record, searchConfig);
 
 			// if the displayed fields for the user are empty due to access, there is no point in adding a 'recordInfo'
 			if (!recordInfo.fieldToShowInfoList.isEmpty()) {
@@ -152,19 +175,18 @@ public inherited sharing class Util_LookupHelper {
      * @description           create a list with information about the fields to display in the record
      * @param  record         record from org
      * @param  searchConfig   search config
-     * @param  objectDescribe object schema description
      * @return                list with fields to show info
      */
-	public static Util_D_RecordInfo.FieldToShowInfo[] generateFieldsToShow(SObject record, Util_D_SearchConfig searchConfig, Schema.DescribeSObjectResult objectDescribe) {
+	public static Util_D_RecordInfo.FieldToShowInfo[] generateFieldsToShow(SObject record, Util_D_SearchConfig searchConfig) {
 		Util_D_RecordInfo.FieldToShowInfo[] fieldToShowInfoList = new Util_D_RecordInfo.FieldToShowInfo[]{};
 			
 		for (Util_D_SearchConfig.FieldToShow fieldToShow : searchConfig.fieldToShowList) {
 			
-			// if user has access to the field
+			// if record has this field and user has access to the field
 			if (record.isSet(fieldToShow.fieldName)) {
 				Util_D_RecordInfo.FieldToShowInfo fieldToShowInfo = new Util_D_RecordInfo.FieldToShowInfo();
 
-				fieldToShowInfo.fieldLabel = getFieldLabel(record, fieldToShow, objectDescribe);
+				fieldToShowInfo.fieldLabel = getFieldLabel(record, fieldToShow);
 				fieldToShowInfo.fieldName = fieldToShow.fieldName;
 				fieldToShowInfo.fieldValue = record.get(fieldToShow.fieldName);
 				fieldToShowInfo.isFieldLabelHidden = fieldToShow.isFieldLabelHidden;
@@ -176,15 +198,13 @@ public inherited sharing class Util_LookupHelper {
 		return fieldToShowInfoList;
 	}
 	
-
 	/**
      * @description           getting a label for a field from a config or org
      * @param  record         record from org
      * @param  fieldToShow    field to show info
-     * @param  objectDescribe object schema description
      * @return                string with label
      */
-	public static String getFieldLabel(SObject record, Util_D_SearchConfig.FieldToShow fieldToShow, Schema.DescribeSObjectResult objectDescribe) {
+	public static String getFieldLabel(SObject record, Util_D_SearchConfig.FieldToShow fieldToShow) {
 		String fieldLabel;
 
 		if (!fieldToShow.isFieldLabelHidden) {
@@ -192,7 +212,7 @@ public inherited sharing class Util_LookupHelper {
 
 			if (fieldLabel == null) {
 				// get label from SObject describe
-				fieldLabel = Utils.getFieldLabelFormSObject(objectDescribe, fieldToShow.fieldName);
+				fieldLabel = Utils.getFieldLabelFormSObject(Util_LookupHelper.objectDescribe, fieldToShow.fieldName);
 			}
 		}
 

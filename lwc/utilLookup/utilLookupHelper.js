@@ -18,10 +18,6 @@ export default new class UtilLookupHelper {
     doLookup(cmp, stringToSearch) {
         this.switchSpinner(cmp, true);
 
-        console.log('stringToSearch', stringToSearch);
-        console.log('searchConfigJson', JSON.stringify(cmp.config.searchConfigMap));
-
-
         lookup({
             stringToSearch,
             searchConfigJson: JSON.stringify(cmp.config.searchConfigMap)
@@ -32,7 +28,6 @@ export default new class UtilLookupHelper {
                     const data = JSON.parse(response.data);
 
                     cmp.recordList = data;
-
                 } else {
                     handleErrorInResponseFromApex(cmp, response);
                 }
