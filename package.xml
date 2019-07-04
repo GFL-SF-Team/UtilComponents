@@ -17,6 +17,11 @@
         <members>Utils</members>
         <members>Utils_PermissionCheckingServiceCtrl</members>
         <members>Utils_PermissionCheckingServiceCtrlTest</members>
+        <members>Util_D_RecordInfo</members>
+        <members>Util_D_SearchConfig</members>
+        <members>Util_LookupController</members>
+        <members>Util_LookupHelper</members>
+        <members>Util_LookupTest</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -50,7 +55,6 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
-        <members>lookupContainer</members>
         <members>utilLookup</members>
         <members>utils</members>
         <name>LightningComponentBundle</name>
