@@ -15,7 +15,7 @@ export default class UtilLookup extends LightningElement {
         configMap = jsonConverter(configMap);
 
         // grab all configs
-        this._configMap = { ...this.defaultConfigMap, ...this._configMap, ...configMap };
+        this._configMap = { ...this._configMap, ...configMap };
         // set valid size
         this._configMap.listSize = helper.validateListSize(this._configMap.listSize);
 
@@ -43,35 +43,42 @@ export default class UtilLookup extends LightningElement {
         isListFocused: false
     };
 
-    defaultConfigMap = {
-        label: 'Lookup for', // label text
-        isLabelHidden: false, // Is the input field label hidden or not?
-        placeholder: 'Lookup for ...', // placeholder for input field
-        listSize: 5, // max number of list items (5 or 7 or 10 only)
-        isHiddenInputWithSelectedRecord: false, // Is the hidden input field with the selected record?
+    // START - lifecycle hooks
+    constructor() {
+        super();
 
-        icon: { // icon config
-            name: 'standard:account', // SLDS icon
-            size: 'small',
-            alternativeText: 'Account'
-        },
+        // set default config for the component on initialization
+        this.config = {
+            label: 'Search', // label text
+            isLabelHidden: false, // Is the input field label hidden or not?
+            placeholder: 'Type to search ...', // placeholder for input field
+            listSize: 5, // max number of list items (5 or 7 or 10 only)
+            isHiddenInputWithSelectedRecord: false, // Is the hidden input field with the selected record?
 
-        searchConfigMap: { // config for search
-            objectName: 'Account',
-            fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'], // fields to query
-            fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
-            fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
-            fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees = 8 AND ...'
-                { fieldName: 'NumberOfEmployees', condition: '=', value: '8', typeOfValue: 'Integer' },
-                { fieldName: 'Type', condition: '=', value: 'Customer - Direct', typeOfValue: 'String' },
-            ],
-            fieldToShowList: [ // fields to display in the result list
-                { fieldName: 'Name', isFieldLabelHidden: true }, // without label
-                { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
-                { fieldName: 'Name', isFieldLabelHidden: false }, // with label from org
-            ]
+            icon: { // icon config
+                name: 'standard:account', // SLDS icon
+                size: 'small',
+                alternativeText: 'Account'
+            },
+
+            searchConfigMap: { // config for search
+                objectName: 'Account',
+                fieldForQueryList: ['Name', 'Phone', 'Type', 'Site'], // fields to query
+                fieldForSearchList: ['Name', 'Site'], // fields for search through 'Name LIKE %text for search% OR Site ...'
+                fieldForOrderList: ['Name'], // optional - fields for 'ORDER BY Name, Site'
+                fieldForFilterCriterionList: [ // optional - fields for filtering 'NumberOfEmployees <> 12345 AND ...'
+                    { fieldName: 'NumberOfEmployees', condition: '<>', value: '12345', typeOfValue: 'Integer' },
+                    { fieldName: 'Type', condition: '<>', value: 'Some value', typeOfValue: 'String' },
+                ],
+                fieldToShowList: [ // fields to display in the result list
+                    { fieldName: 'Name', isFieldLabelHidden: true }, // without label
+                    { fieldLabel: 'Phone number', fieldName: 'Phone', isFieldLabelHidden: false }, // with custom label
+                    { fieldName: 'Name', isFieldLabelHidden: false }, // with label from org
+                ]
+            }
         }
     }
+    // END - lifecycle hooks
 
     // private methods for markup computed value
 

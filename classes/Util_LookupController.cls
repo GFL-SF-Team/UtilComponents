@@ -14,7 +14,7 @@ public with sharing class Util_LookupController {
 	 * @param  searchConfigJson json string with search config
 	 * @return                  response with found records
 	 */
-	@AuraEnabled
+	@AuraEnabled(cacheable = true)
 	public static LightningResult lookup(String stringToSearch, String searchConfigJson) {
 
 		try {
