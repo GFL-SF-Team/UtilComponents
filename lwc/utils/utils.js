@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // !!! - This file should contain only universal functions that can be used everywhere.
 // !!! - Do not add a function that will be used only in your application.
 // !!! - Add a full comment block
@@ -11,13 +10,21 @@ import * as $Validation from './validationUtils';
 export * from './validationUtils';
 export * from './pubsub';
 
+/**
+ * @description to display error in console
+ * @author Dmytro Lambru
+ * @param {*} arg1
+ * @param {*} arg2
+ */
 export function showConsoleError(arg1, arg2) {
 
     if (!DEBUG_MODE) return;
 
     if (arg2) {
+        // eslint-disable-next-line no-console
         console.error(arg1, arg2)
     } else {
+        // eslint-disable-next-line no-console
         console.error(arg1)
     }
 }

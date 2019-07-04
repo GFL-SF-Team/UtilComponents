@@ -47,7 +47,7 @@ const registerListener = (eventName, callback, thisArg) => {
 };
 
 /**
- * Unregisters a callback for an event
+ * Unregister a callback for an event
  * @param {string} eventName - Name of the event to unregister from.
  * @param {function} callback - Function to unregister.
  * @param {object} thisArg - The value to be passed as the this parameter to the callback function is bound.
@@ -62,7 +62,7 @@ const unregisterListener = (eventName, callback, thisArg) => {
 };
 
 /**
- * Unregisters all event listeners bound to an object.
+ * Unregister all event listeners bound to an object.
  * @param {object} thisArg - All the callbacks bound to this object will be removed.
  */
 const unregisterAllListeners = thisArg => {

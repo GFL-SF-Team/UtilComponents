@@ -7,7 +7,6 @@ import lookup from '@salesforce/apex/Util_LookupController.lookup';
 
 export default new class UtilLookupHelper {
 
-
     /**
      * @description send a request to the organization to search for records
      * @author Dmytro Lambru

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // !!! - This file must contain validation functions that return a boolean value - TRUE or FALSE
 
 import { LightningElement } from 'lwc';
