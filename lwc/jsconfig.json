@@ -3,6 +3,9 @@
         "experimentalDecorators": true,
         "baseUrl": ".",
         "paths": {
+            "c/timeLogger": [
+                "timeLogger/timeLogger.js"
+            ],
             "c/utilLookup": [
                 "utilLookup/utilLookup.js"
             ],

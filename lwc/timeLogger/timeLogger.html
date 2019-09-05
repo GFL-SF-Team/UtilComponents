@@ -1,0 +1,59 @@
+<template>
+    <div class="slds-grid slds-wrap slds-align_absolute-center my-full-filling">        
+        <template if:true={isShowTimer}>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">
+                <span style="font-weight: bolder; color: #5f79d3" class="slds-text-heading_large">
+                    {timeSpent}
+                </span>
+            </div>
+        </template>
+
+        <template if:true={isShowFields}>
+            <div class="slds-col slds-size_10-of-12">
+                <div class="slds-col slds-wrap slds-size_1-of-1 slds-align_absolute-center">
+
+                    <div class="slds-grid slds-col slds-size_1-of-1 slds-align-content-center slds-m-bottom_x-small">
+                        <span style="font-weight: bolder" class="slds-text-title_caps">
+                            Please fill in all fields
+                        </span>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_x-small">
+                        <lightning-combobox
+                            name="typeOfInquiry"
+                            label="Type of Inquiry"
+                            value=""
+                            placeholder="Select type plz"
+                            options={typeOfInquiryOptionList}
+                            onchange={handleChangeTypeOfInquiry}
+                            required
+                        ></lightning-combobox>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_x-small">
+                        <lightning-input type="number" name="timeSpent" value={timeSpentInMinutes} label="Time Spent (minutes)" readonly required></lightning-input>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={isShowStartBtn}>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
+                <lightning-button variant="brand" label="Start Logging" title="Start Logging" onclick={handleStartBtn}></lightning-button>
+            </div>
+        </template>
+    
+        <template if:true={isShowFinishBtn}>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
+                <lightning-button variant="brand" label="Finish Logging" title="Finish Logging" onclick={handleFinishBtn}></lightning-button>
+            </div>
+        </template>
+    
+        <template if:true={isShowSaveBtn}>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
+                <lightning-button variant="success" label="Save Log" title="Save Log" disabled={isDisabledSaveBtn} onclick={handleSaveBtn}></lightning-button>
+            </div>
+        </template>
+        
+    </div>
+</template>
