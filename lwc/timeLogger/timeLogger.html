@@ -3,7 +3,7 @@
         <template if:true={isShowTimer}>
             <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">
                 <span style="font-weight: bolder; color: #5f79d3" class="slds-text-heading_large">
-                    {timeSpent}
+                    {timerText}
                 </span>
             </div>
         </template>
@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="slds-col slds-size_1-of-1 slds-m-bottom_x-small">
-                        <lightning-input type="number" name="timeSpent" value={timeSpentInMinutes} label="Time Spent (minutes)" readonly required></lightning-input>
+                        <lightning-input type="number" name="timeSpentInMinutes" value={timeSpentInMinutes} label="Time Spent (minutes)" readonly required></lightning-input>
                     </div>
                 </div>
             </div>
