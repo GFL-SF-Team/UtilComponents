@@ -1,9 +1,9 @@
 public with sharing class TimeLoggerController {
 
-    private static TimeLoggerController.LightningResult response = new TimeLoggerController.LightningResult();
+    private static LightningResult response = new LightningResult();
 
 	@AuraEnabled
-	public static TimeLoggerController.LightningResult saveLog(String recordJsonString) {
+	public static LightningResult saveLog(String recordJsonString) {
 
 		try {
 
@@ -11,29 +11,11 @@ public with sharing class TimeLoggerController {
 
 			insert timeLog;
 
-			System.debug('json >>>' + recordJsonString);
-			System.debug('obj >>>' + timeLog);
-
-            // Time_Log__c timeLog = new Time_Log__c(
-            //     TimeSpent__c = 'Utility Bar Test'
-            // );
-
-            // insert timeLog;
-
-			// Util_D_SearchConfig searchConfig = Util_D_SearchConfig.parse(searchConfigJson);
-
-			// if (!Utils.schemaCheckObjectIsAccessible(searchConfig.objectName)) {
-			// 	// return empty list
-			// 	return response.setResult('[]');
-			// }
-
-			// Util_D_RecordInfo[] recordInfoList = Util_LookupHelper.searchRecords(stringToSearch, searchConfig);
-
             response = response.setResult( JSON.serialize(timeLog) );
         } catch (QueryException exc) {
-            response = response.setError( Utils.trackException(true, false, 'saveLog', exc, TimeLoggerController.class) );
+            response = response.setError( JSON.serialize(new ExceptionData(exc, TimeLoggerController.class, 'saveLog')) );
         } catch (Exception exc) {
-            response = response.setError( Utils.trackException(true, false, 'saveLog', exc, TimeLoggerController.class) );
+            response = response.setError( JSON.serialize(new ExceptionData(exc, TimeLoggerController.class, 'saveLog')) );
         }
 
         return response;
@@ -80,6 +62,27 @@ public with sharing class TimeLoggerController {
 			this.code = code;
 			this.success = FALSE;
 			return this;
+		}
+	}
+
+	/*
+     * @description: Class created to keep exceptions data and can be serialized
+     */
+	public class ExceptionData{
+		@AuraEnabled public String exceptionType {get;set;}
+		@AuraEnabled public String classType {get;set;}
+		@AuraEnabled public String method {get;set;}
+		@AuraEnabled public Integer inLine {get;set;}
+		@AuraEnabled public String message {get;set;}
+		@AuraEnabled public String stackTraceString {get;set;}
+
+		public ExceptionData(Exception exc, Type t, String methodName){
+			this.exceptionType = exc.getTypeName();
+			this.classType = t.getName();
+			this.method = methodName;
+			this.inLine = exc.getLineNumber();
+			this.message = exc.getMessage();
+			this.stackTraceString = exc.getStackTraceString();
 		}
 	}
 }

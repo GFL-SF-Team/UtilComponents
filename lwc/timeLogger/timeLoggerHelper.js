@@ -1,6 +1,6 @@
 import Utils from './timeLoggerUtils';
 import saveLog from '@salesforce/apex/TimeLoggerController.saveLog';
-import { DEFAULT_TIMER_TEXT } from './timeLoggerConstants';
+import { DEFAULT_TIMER_TEMPLATE } from './timeLoggerConstants';
 
 export default new class TimeLoggerHelper {
 
@@ -18,27 +18,19 @@ export default new class TimeLoggerHelper {
     cacheCheck(cmp) {
         const timeLoggerCacheMap = this.getTimeLoggerCache();
 
-        console.log('interval >>> timeLoggerCacheMap', timeLoggerCacheMap);
-
         if (timeLoggerCacheMap && timeLoggerCacheMap.cmpStateInfoMap && timeLoggerCacheMap.timerInfoMap) {
 
             if (timeLoggerCacheMap.cmpStateInfoMap.isInitialState && !cmp.cmpStateInfoMap.isInitialState) {
-                console.log('setCmpStateToInitial()');
-
                 this.updateCmpDataFromCache(cmp, timeLoggerCacheMap);
                 this.setCmpStateToInitial(cmp);
             }
 
             if (timeLoggerCacheMap.cmpStateInfoMap.isTimerState && !cmp.cmpStateInfoMap.isTimerState) {
-                console.log('setCmpStateToTimer()');
-
                 this.updateCmpDataFromCache(cmp, timeLoggerCacheMap);
                 this.setCmpStateToTimer(cmp);
             }
 
             if (timeLoggerCacheMap.cmpStateInfoMap.isRecordSaveState && !cmp.cmpStateInfoMap.isRecordSaveState) {
-                console.log('setCmpStateToSaveRecord()');
-
                 this.updateCmpDataFromCache(cmp, timeLoggerCacheMap);
                 this.setCmpStateToSaveRecord(cmp);
             }
@@ -51,39 +43,46 @@ export default new class TimeLoggerHelper {
     }
 
     setCmpStateToInitial(cmp) {
-        this.resetCmpElementViewState(cmp);
-        this.showTimer(cmp);
-        this.showStartBtn(cmp);
-        this.disableSaveBtn(cmp);
-
+        this.resetTimer(cmp);
+        this.resetTimerInfo(cmp);
+        this.setCmpViewStateToInitial(cmp);
         this.changeCmpStateInfo(cmp, { isInitialState: true });
-
         this.updateTimeLoggerCache(cmp);
     }
 
+
     setCmpStateToTimer(cmp) {
         this.startTimer(cmp);
-
-        this.resetCmpElementViewState(cmp);
-        this.showTimer(cmp);
-        this.showFinishBtn(cmp);
-
+        this.setCmpViewStateToTimer(cmp);
         this.changeCmpStateInfo(cmp, { isTimerState: true });
-
         this.updateTimeLoggerCache(cmp);
     }
 
     setCmpStateToSaveRecord(cmp) {
         this.calculateMinutesSpent(cmp);
         this.resetTimer(cmp);
+        this.setCmpViewStateToSaveRecord(cmp);
+        this.changeCmpStateInfo(cmp, { isRecordSaveState: true });
+        this.updateTimeLoggerCache(cmp);
+    }
 
+    setCmpViewStateToInitial(cmp) {
+        this.resetCmpElementViewState(cmp);
+        this.showTimer(cmp);
+        this.showStartBtn(cmp);
+        this.disableSaveBtn(cmp);
+    }
+
+    setCmpViewStateToTimer(cmp) {
+        this.resetCmpElementViewState(cmp);
+        this.showTimer(cmp);
+        this.showFinishBtn(cmp);
+    }
+
+    setCmpViewStateToSaveRecord(cmp) {
         this.resetCmpElementViewState(cmp);
         this.showFields(cmp);
         this.showSaveBtn(cmp);
-
-        this.changeCmpStateInfo(cmp, { isRecordSaveState: true });
-
-        this.updateTimeLoggerCache(cmp);
     }
 
     resetCmpElementViewState(cmp) {
@@ -109,9 +108,14 @@ export default new class TimeLoggerHelper {
     }
 
     getTimeLoggerCache() {
+        let cacheInUtf8String = 'false';
         const timeLoggerCacheJSON = localStorage.getItem('time_logger_cache');
 
-        return JSON.parse(timeLoggerCacheJSON);
+        if (timeLoggerCacheJSON) {
+            cacheInUtf8String = this.b64_to_utf8(timeLoggerCacheJSON);
+        }
+
+        return JSON.parse(cacheInUtf8String);
     }
 
     updateTimeLoggerCache(cmp) {
@@ -120,8 +124,19 @@ export default new class TimeLoggerHelper {
             cmpStateInfoMap: cmp.cmpStateInfoMap
         }
 
-        localStorage.setItem('time_logger_cache', JSON.stringify(timeLoggerCacheMap));
+        const cacheInBase64String = this.utf8_to_b64(JSON.stringify(timeLoggerCacheMap));
+
+        localStorage.setItem('time_logger_cache', cacheInBase64String);
     }
+
+    utf8_to_b64(str) {
+        return window.btoa(unescape(encodeURIComponent(str)));
+    }
+
+    b64_to_utf8(str) {
+        return decodeURIComponent(escape(window.atob(str)));
+    }
+
 
     startTimer(cmp) {
 
@@ -140,16 +155,12 @@ export default new class TimeLoggerHelper {
             let minutes = (diff / 60) | 0;
             let seconds = (diff % 60) | 0;
 
-            minutes = this.timeNumberFormat(minutes);
-            seconds = this.timeNumberFormat(seconds);
-
-            cmp.timerText = `${minutes}m ${seconds}s`;
-
+            this.setTimerText(cmp, minutes, seconds);
         }, 1000);
     }
 
     timeNumberFormat(number) {
-        return number < 10 ? "0" + number : number;
+        return number < 10 ? '0' + number : '' + number;
     }
 
     calculateMinutesSpent(cmp) {
@@ -171,7 +182,23 @@ export default new class TimeLoggerHelper {
     resetTimer(cmp) {
         clearInterval(this.timerIntervalId);
 
-        cmp.timerText = DEFAULT_TIMER_TEXT;
+        this.setDefaultTimerText(cmp);
+    }
+
+    setDefaultTimerText(cmp) {
+        cmp.timerText = DEFAULT_TIMER_TEMPLATE;
+        cmp.timerText = cmp.timerText.replace('%MM%', '00');
+        cmp.timerText = cmp.timerText.replace('%SS%', '00');
+    }
+
+    setTimerText(cmp, minutes, seconds) {
+        cmp.timerText = DEFAULT_TIMER_TEMPLATE;
+
+        minutes = this.timeNumberFormat(minutes);
+        seconds = this.timeNumberFormat(seconds);
+
+        cmp.timerText = cmp.timerText.replace('%MM%', minutes);
+        cmp.timerText = cmp.timerText.replace('%SS%', seconds);
     }
 
     resetTimerInfo(cmp) {

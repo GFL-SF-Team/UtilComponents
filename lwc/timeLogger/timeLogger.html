@@ -39,21 +39,36 @@
 
         <template if:true={isShowStartBtn}>
             <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
-                <lightning-button variant="brand" label="Start Logging" title="Start Logging" onclick={handleStartBtn}></lightning-button>
+                <button class="slds-button slds-button_brand my-button-flexible" type="button" title="Start Logging" onclick={handleStartBtn}>
+                    Start Logging
+                </button>
             </div>
         </template>
     
         <template if:true={isShowFinishBtn}>
             <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
-                <lightning-button variant="brand" label="Finish Logging" title="Finish Logging" onclick={handleFinishBtn}></lightning-button>
+                <button class="slds-button slds-button_brand my-button-flexible" type="button" title="Finish Logging" onclick={handleFinishBtn}>
+                    Finish Logging
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
+                <button class="slds-button slds-button_destructive my-button-flexible" type="button" title="Cancel" onclick={handleCancelBtn}>
+                    Cancel
+                </button>
             </div>
         </template>
     
         <template if:true={isShowSaveBtn}>
             <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
-                <lightning-button variant="success" label="Save Log" title="Save Log" disabled={isDisabledSaveBtn} onclick={handleSaveBtn}></lightning-button>
+                <button class="slds-button slds-button_success my-button-flexible" type="button" title="Save Log" disabled={isDisabledSaveBtn} onclick={handleSaveBtn}>
+                    Save Log
+                </button>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-align_absolute-center slds-m-top_x-small">
+                <button class="slds-button slds-button_destructive my-button-flexible" type="button" title="Cancel" onclick={handleCancelBtn}>
+                    Cancel
+                </button>
             </div>
         </template>
-        
     </div>
 </template>

@@ -1,10 +1,10 @@
 import { LightningElement, track } from 'lwc';
 import Helper from './timeLoggerHelper';
-import { DEFAULT_TIMER_TEXT } from './timeLoggerConstants';
+import { DEFAULT_TIMER_TEMPLATE } from './timeLoggerConstants';
 
 export default class TimeLogger extends LightningElement {
 
-    @track timerText = DEFAULT_TIMER_TEXT;
+    @track timerText;
 
     @track isShowTimer = false;
     @track isShowStartBtn = false;
@@ -31,9 +31,8 @@ export default class TimeLogger extends LightningElement {
     };
 
     connectedCallback() {
-        Helper.showTimer(this);
-        Helper.showStartBtn(this);
-
+        Helper.setDefaultTimerText(this);
+        Helper.setCmpViewStateToInitial(this);
         Helper.startCacheCheck(this);
     }
 
@@ -59,15 +58,16 @@ export default class TimeLogger extends LightningElement {
 
     handleSaveBtn() {
         Helper.saveLogRecord(this);
-        Helper.resetTimerInfo(this);
+        Helper.setCmpStateToInitial(this);
+    }
+
+    handleCancelBtn() {
         Helper.setCmpStateToInitial(this);
     }
 
     handleChangeTypeOfInquiry(event) {
-        Helper.disableSaveBtn(this);
         const value = event.detail.value;
-
-        console.log('selected value', value);
+        Helper.disableSaveBtn(this);
 
         if (value) {
             this.fieldInfoMap.TypeOfInquiry__c = value;
